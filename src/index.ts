@@ -93,6 +93,16 @@ let scoringAnimTimer = 0;
 let houseRingPulse = 0;
 let noSweepThisMatch = true; // track for achievement
 
+// Ice conditions
+type IceCondition = 'standard' | 'fast' | 'slow' | 'curly';
+let currentIceCondition: IceCondition = 'standard';
+const ICE_CONDITION_MODS: Record<IceCondition, { friction: number; curl: number; label: string }> = {
+  standard: { friction: 1.0, curl: 1.0, label: 'Standard Ice' },
+  fast: { friction: 1.003, curl: 0.8, label: 'Fast Ice (fresh pebble)' },
+  slow: { friction: 0.997, curl: 1.2, label: 'Slow Ice (worn)' },
+  curly: { friction: 1.0, curl: 2.0, label: 'Curly Ice (heavy pebble)' },
+};
+
 // Particle system
 interface Particle { mesh: Mesh; vx: number; vy: number; vz: number; life: number; maxLife: number; }
 const particles: Particle[] = [];
@@ -654,7 +664,14 @@ function startGame(): void {
     game.cpuStonesLeft = 1;
   } else if (game.mode === 'daily') {
     game.totalEnds = 4;
-    // Seeded random for daily
+    // Seeded random for daily — also randomize ice conditions
+    const seed = getDailySeed();
+    const rng = mulberry32(seed);
+    const iceTypes: IceCondition[] = ['standard', 'fast', 'slow', 'curly'];
+    currentIceCondition = iceTypes[Math.floor(rng() * iceTypes.length)];
+    showToast('Ice Condition', ICE_CONDITION_MODS[currentIceCondition].label);
+  } else {
+    currentIceCondition = 'standard'; // reset for non-daily modes
   }
 
   modesPlayed.add(game.mode);
@@ -905,14 +922,16 @@ function updatePhysics(dt: number): void {
 
     allStopped = false;
 
-    // Apply friction
-    const friction = (game.isSweeping && s === game.stonesOnIce[game.stonesOnIce.length - 1] && game.isPlayerTurn)
+    // Apply friction (modified by ice condition)
+    const iceMod = ICE_CONDITION_MODS[currentIceCondition];
+    const baseFriction = (game.isSweeping && s === game.stonesOnIce[game.stonesOnIce.length - 1] && game.isPlayerTurn)
       ? SWEPT_FRICTION : ICE_FRICTION;
+    const friction = baseFriction * iceMod.friction;
     s.vx *= friction;
     s.vz *= friction;
 
-    // Apply curl
-    s.vx += s.spin * CURL_FACTOR * speed;
+    // Apply curl (modified by ice condition)
+    s.vx += s.spin * CURL_FACTOR * iceMod.curl * speed;
 
     // Move
     s.x += s.vx * dt * 60;
@@ -1095,6 +1114,11 @@ function scoreEnd(): void {
   // Check for button hit
   if (playerDists.length > 0 && playerDists[0] < BUTTON_RADIUS * 2) tryUnlock('button_hit');
 
+  // Guard stone check: count player stones in front of house (between hog and house)
+  const guardStones = game.stonesOnIce.filter(s => s.active && s.team === 'player'
+    && s.z > HOUSE_CENTER_Z + HOUSE_RADIUS_12 && s.z < HOG_LINE_Z);
+  if (guardStones.length >= 3) tryUnlock('guard_master');
+
   // Check for steal (scoring without last stone)
   // In real curling, the team that scored last delivers first next end (disadvantage)
   // Steal = scoring when you threw first (don't have hammer)
@@ -1137,6 +1161,24 @@ function scoreEnd(): void {
   // After 3 seconds, start next end or end game
   setTimeout(() => {
     if (game.currentEnd >= game.totalEnds) {
+      // Check for tie — play extra end
+      if (game.playerScore === game.cpuScore && game.mode !== 'practice' && game.mode !== 'knockout') {
+        game.totalEnds++;
+        showToast('EXTRA END!', 'Tied game — sudden death');
+        audio.playGameStart();
+        game.currentEnd++;
+        game.stonesOnIce = [];
+        game.playerStonesLeft = 4;
+        game.cpuStonesLeft = 4;
+        for (const m of stoneMeshes) { m.visible = false; m.position.set(0, STONE_HEIGHT / 2, 100); }
+        for (const g of stoneGlows) g.visible = false;
+        stoneTrails.clear();
+        // Hammer stays same
+        game.isPlayerTurn = game.hammerTeam === 'cpu';
+        if (game.isPlayerTurn) beginPlayerAim();
+        else beginCpuTurn();
+        return;
+      }
       endGame();
     } else {
       game.currentEnd++;
@@ -1441,10 +1483,20 @@ function update(dt: number): void {
     if (Math.abs(p.position.z) > 10) p.position.z *= -0.9;
   }
 
-  // Animate stone glows
+  // Animate stone glows and spin
   for (let i = 0; i < stoneMeshes.length; i++) {
     if (stoneMeshes[i].visible && stoneGlows[i]) {
       (stoneGlows[i].material as MeshBasicMaterial).opacity = 0.08 + Math.sin(time * 3 + i) * 0.04;
+    }
+    // Rotate stone based on spin for visible curl
+    if (stoneMeshes[i].visible) {
+      const stoneState = game.stonesOnIce.find(s => s.meshIndex === i && s.active);
+      if (stoneState) {
+        const speed = Math.sqrt(stoneState.vx ** 2 + stoneState.vz ** 2);
+        if (speed > STONE_STOP_THRESHOLD) {
+          stoneMeshes[i].rotation.y += stoneState.spin * dt * 8;
+        }
+      }
     }
   }
 
@@ -1591,6 +1643,7 @@ function populateSettings(): void {
   setText('settings', 'vol-sfx', String(Math.round(audio.getSfxVolume() * 100)));
   setText('settings', 'vol-music', String(Math.round(audio.getMusicVolume() * 100)));
   setText('settings', 'theme-name', currentTheme.name);
+  // Ice condition display (informational for daily, configurable for practice)
 }
 
 function adjustVolume(type: string, delta: number): void {
