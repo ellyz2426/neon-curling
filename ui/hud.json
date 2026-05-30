@@ -167,6 +167,39 @@
           "class": "hud-group"
         },
         "dataUid": "uid-14"
+      },
+      {
+        "type": "container",
+        "sourceTag": "div",
+        "children": [
+          {
+            "sourceTag": "span",
+            "type": "custom",
+            "children": [
+              "BEST"
+            ],
+            "properties": {
+              "class": "hud-label"
+            },
+            "dataUid": "uid-18"
+          },
+          {
+            "sourceTag": "span",
+            "type": "custom",
+            "children": [
+              "--"
+            ],
+            "properties": {
+              "id": "hud-best-dist",
+              "class": "hud-value-yellow"
+            },
+            "dataUid": "uid-19"
+          }
+        ],
+        "properties": {
+          "class": "hud-group"
+        },
+        "dataUid": "uid-17"
       }
     ],
     "properties": {
@@ -292,7 +325,7 @@
         "column": 0
       },
       "end": {
-        "line": 60,
+        "line": 64,
         "column": 6
       }
     },
@@ -444,6 +477,36 @@
       "end": {
         "line": 58,
         "column": 52
+      }
+    },
+    "uid-17": {
+      "start": {
+        "line": 60,
+        "column": 2
+      },
+      "end": {
+        "line": 63,
+        "column": 8
+      }
+    },
+    "uid-18": {
+      "start": {
+        "line": 61,
+        "column": 4
+      },
+      "end": {
+        "line": 61,
+        "column": 39
+      }
+    },
+    "uid-19": {
+      "start": {
+        "line": 62,
+        "column": 4
+      },
+      "end": {
+        "line": 62,
+        "column": 63
       }
     }
   }
