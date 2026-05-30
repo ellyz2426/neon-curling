@@ -1,0 +1,33 @@
+<uikitml>
+<panel width="600" height="400" background-color="#0a1020e8" border-radius="16">
+  <column padding="20" spacing="12" align="center">
+    <text font-size="24" color="#ffd700" align="center">END SUMMARY</text>
+    <panel width="560" height="2" background-color="#ffd70044" />
+    <text id="end-num" font-size="18" color="#ffffff" align="center">End 1 of 8</text>
+    <row width="560" spacing="0">
+      <column width="280" spacing="6" align="center">
+        <text font-size="16" color="#00ffff88">YOU</text>
+        <text id="end-p-score" font-size="36" color="#00ffff">0</text>
+        <text id="end-p-closest" font-size="14" color="#888888">Closest: --</text>
+        <text id="end-p-in-house" font-size="14" color="#888888">In house: 0</text>
+      </column>
+      <column width="280" spacing="6" align="center">
+        <text font-size="16" color="#ff00ff88">CPU</text>
+        <text id="end-c-score" font-size="36" color="#ff00ff">0</text>
+        <text id="end-c-closest" font-size="14" color="#888888">Closest: --</text>
+        <text id="end-c-in-house" font-size="14" color="#888888">In house: 0</text>
+      </column>
+    </row>
+    <panel width="560" height="2" background-color="#ffffff22" />
+    <row width="560" spacing="0">
+      <column width="280" align="center">
+        <text id="end-total" font-size="18" color="#ffffff" align="center">Total: 0 - 0</text>
+      </column>
+      <column width="280" align="center">
+        <text id="end-hammer" font-size="14" color="#ffaa00" align="center">Hammer: YOU</text>
+      </column>
+    </row>
+    <text id="end-ice" font-size="12" color="#666666" align="center">Standard Ice</text>
+  </column>
+</panel>
+</uikitml>

@@ -489,6 +489,7 @@ function setupUI(): void {
     { name: 'stats', config: '/ui/stats.json', maxW: 0.9, maxH: 0.9, type: 'world', pos: [0, 1.5, -3] },
     { name: 'tournament', config: '/ui/tournament.json', maxW: 0.9, maxH: 0.8, type: 'world', pos: [0, 1.5, -3] },
     { name: 'stoneskins', config: '/ui/stoneskins.json', maxW: 1.0, maxH: 0.8, type: 'world', pos: [0, 1.5, -3] },
+    { name: 'endsummary', config: '/ui/endsummary.json', maxW: 0.85, maxH: 0.6, type: 'world', pos: [0, 1.5, -3] },
   ];
 
   for (const cfg of configs) {
@@ -606,7 +607,7 @@ function showState(state: GameState): void {
   game.state = state;
   const allPanels = ['title', 'modeselect', 'difficulty', 'hud', 'sweepbar', 'powerbar',
     'scoreboard', 'pause', 'gameover', 'leaderboard', 'achievements', 'settings', 'help', 'toast', 'countdown',
-    'stats', 'tournament', 'stoneskins'];
+    'stats', 'tournament', 'stoneskins', 'endsummary'];
 
   // Hide all
   for (const name of allPanels) {
@@ -1156,7 +1157,25 @@ function scoreEnd(): void {
   }
 
   updateScoreboard();
+
+  // Populate end summary panel
+  setText('endsummary', 'end-num', `End ${game.currentEnd} of ${game.totalEnds}`);
+  setText('endsummary', 'end-p-score', String(pScore));
+  setText('endsummary', 'end-c-score', String(cScore));
+  setText('endsummary', 'end-p-closest', `Closest: ${playerDists.length > 0 ? playerDists[0].toFixed(2) + 'm' : '--'}`);
+  setText('endsummary', 'end-c-closest', `Closest: ${cpuDists.length > 0 ? cpuDists[0].toFixed(2) + 'm' : '--'}`);
+  const pInHouse = playerDists.filter(d => d <= HOUSE_RADIUS_12).length;
+  const cInHouse = cpuDists.filter(d => d <= HOUSE_RADIUS_12).length;
+  setText('endsummary', 'end-p-in-house', `In house: ${pInHouse}`);
+  setText('endsummary', 'end-c-in-house', `In house: ${cInHouse}`);
+  setText('endsummary', 'end-total', `Total: ${game.playerScore} - ${game.cpuScore}`);
+  const nextHammer = pScore > 0 ? 'CPU' : (cScore > 0 ? 'YOU' : (game.hammerTeam === 'player' ? 'YOU' : 'CPU'));
+  setText('endsummary', 'end-hammer', `Next Hammer: ${nextHammer}`);
+  setText('endsummary', 'end-ice', ICE_CONDITION_MODS[currentIceCondition].label);
+
   showState('endresult');
+  // Also show end summary
+  if (uiEntities.endsummary?.object3D) uiEntities.endsummary.object3D.visible = true;
 
   // After 3 seconds, start next end or end game
   setTimeout(() => {
@@ -1591,6 +1610,17 @@ function updateHUD(): void {
   setText('hud', 'hud-cpu-score', String(game.cpuScore));
   setText('hud', 'hud-stones', String(game.isPlayerTurn ? game.playerStonesLeft : game.cpuStonesLeft));
   setText('hud', 'hud-turn', (game.isPlayerTurn ? 'YOU' : 'CPU') + hammerIndicator);
+
+  // Best stone distance from button
+  const playerDists = game.stonesOnIce
+    .filter(s => s.active && s.team === 'player')
+    .map(s => Math.sqrt(s.x ** 2 + (s.z - HOUSE_CENTER_Z) ** 2));
+  if (playerDists.length > 0) {
+    const best = Math.min(...playerDists);
+    setText('hud', 'hud-best-dist', best <= HOUSE_RADIUS_12 ? best.toFixed(2) + 'm' : 'OUT');
+  } else {
+    setText('hud', 'hud-best-dist', '--');
+  }
 }
 
 function updatePowerBar(): void {
