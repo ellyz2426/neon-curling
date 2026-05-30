@@ -166,6 +166,36 @@ export class AudioManager {
     setTimeout(() => this.playSfx(300, 'sawtooth', 0.15, 0.2), 100);
   }
 
+  playExtraEnd(): void {
+    // Dramatic ascending tone
+    const notes = [330, 440, 554, 659, 880];
+    notes.forEach((f, i) => {
+      setTimeout(() => this.playSfx(f, 'sine', 0.5, 0.25), i * 150);
+    });
+  }
+
+  playTournamentWin(): void {
+    const notes = [523, 659, 784, 1047, 1319, 1568];
+    notes.forEach((f, i) => {
+      setTimeout(() => {
+        this.playSfx(f, 'sine', 0.6, 0.25);
+        this.playSfx(f * 0.5, 'triangle', 0.6, 0.15);
+      }, i * 180);
+    });
+  }
+
+  playSkinUnlock(): void {
+    const notes = [440, 554, 659, 880];
+    notes.forEach((f, i) => {
+      setTimeout(() => this.playSfx(f, 'triangle', 0.4, 0.2), i * 100);
+    });
+  }
+
+  playHogViolation(): void {
+    this.playSfx(200, 'sawtooth', 0.3, 0.2);
+    setTimeout(() => this.playSfx(150, 'sawtooth', 0.3, 0.15), 150);
+  }
+
   startAmbientMusic(): void {
     const ctx = this.ensureCtx();
     if (this.musicOsc) return;

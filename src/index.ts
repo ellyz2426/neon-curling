@@ -21,7 +21,7 @@ import {
   STONE_STOP_THRESHOLD, COLLISION_RESTITUTION,
   LeaderboardEntry, loadAchievements, saveAchievements, loadLeaderboard, saveLeaderboard,
   loadStats, saveStats, GameStats, loadModesPlayed, saveModesPlayed,
-  mulberry32, getDailySeed,
+  mulberry32, getDailySeed, calcLevel, xpInCurrentLevel, xpForLevel,
   STONE_SKINS, StoneSkin, loadUnlockedSkins, saveUnlockedSkins, loadSelectedSkin, saveSelectedSkin,
   TOURNAMENT_OPPONENTS,
 } from './types';
@@ -1035,6 +1035,7 @@ function updatePhysics(dt: number): void {
       stoneMeshes[s.meshIndex].visible = false;
       stoneGlows[s.meshIndex].visible = false;
       showToast('HOG LINE!', 'Stone removed');
+      audio.playHogViolation();
     }
   }
 
@@ -1184,7 +1185,7 @@ function scoreEnd(): void {
       if (game.playerScore === game.cpuScore && game.mode !== 'practice' && game.mode !== 'knockout') {
         game.totalEnds++;
         showToast('EXTRA END!', 'Tied game — sudden death');
-        audio.playGameStart();
+        audio.playExtraEnd();
         game.currentEnd++;
         game.stonesOnIce = [];
         game.playerStonesLeft = 4;
@@ -1229,6 +1230,21 @@ function endGame(): void {
   const won = game.playerScore > game.cpuScore;
   const draw = game.playerScore === game.cpuScore;
 
+  // Award XP
+  let xpGained = 10; // base XP for playing
+  if (won) xpGained += 25;
+  if (game.difficulty === 'hard') xpGained += 15;
+  else if (game.difficulty === 'medium') xpGained += 5;
+  xpGained += game.playerScore * 3;
+  if (game.mode === 'tournament') xpGained += 20;
+
+  const oldLevel = calcLevel(stats.xp);
+  stats.xp += xpGained;
+  stats.level = calcLevel(stats.xp);
+  if (stats.level > oldLevel) {
+    showToast(`LEVEL UP!`, `Level ${stats.level}`);
+  }
+
   if (won) {
     stats.totalWins++;
     audio.playGameEnd();
@@ -1251,6 +1267,7 @@ function endGame(): void {
         unlockedSkins.add(skin.id);
         skinsChanged = true;
         showToast(`Skin Unlocked!`, skin.name);
+        audio.playSkinUnlock();
       }
     }
     if (skinsChanged) {
@@ -1283,6 +1300,7 @@ function endGame(): void {
       if (game.tournamentRound >= 3) {
         // Won the tournament!
         tryUnlock('tournament_win');
+        audio.playTournamentWin();
         // Unlock gold skin
         if (!unlockedSkins.has('gold')) {
           unlockedSkins.add('gold');
@@ -1316,7 +1334,7 @@ function endGame(): void {
   saveLeaderboard(leaderboard);
 
   // Populate game over panel
-  const resultText = won ? 'YOU WIN!' : draw ? 'DRAW' : 'YOU LOSE';
+  const resultText = (won ? 'YOU WIN!' : draw ? 'DRAW' : 'YOU LOSE') + ` (+${xpGained} XP)`;
   setText('gameover', 'go-result', resultText);
   setText('gameover', 'go-score', `${game.playerScore} - ${game.cpuScore}`);
   setText('gameover', 'go-mode', game.mode.toUpperCase());
@@ -1772,6 +1790,10 @@ function populateStats(): void {
   setText('stats', 'stat-bestend', String(stats.bestEnd));
   setText('stats', 'stat-sweep', String(Math.round(stats.totalSweepTime)));
   setText('stats', 'stat-ach', `${unlockedAchievements.size}/${ACHIEVEMENTS.length}`);
+  // XP display
+  const currentXp = xpInCurrentLevel(stats.xp);
+  const needed = xpForLevel(stats.level);
+  setText('stats', 'stats-title', `CAREER STATS — Level ${stats.level} (${currentXp}/${needed} XP)`);
 }
 
 // ============================================================

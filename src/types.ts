@@ -181,13 +181,15 @@ export interface GameStats {
   totalTakeouts: number;
   bestEnd: number;
   totalSweepTime: number;
+  xp: number;
+  level: number;
 }
 
 export function loadStats(): GameStats {
   try {
     const data = localStorage.getItem(STORAGE_KEYS.stats);
-    return data ? JSON.parse(data) : { totalGames: 0, totalWins: 0, totalStonesThrown: 0, totalTakeouts: 0, bestEnd: 0, totalSweepTime: 0 };
-  } catch { return { totalGames: 0, totalWins: 0, totalStonesThrown: 0, totalTakeouts: 0, bestEnd: 0, totalSweepTime: 0 }; }
+    return data ? JSON.parse(data) : { totalGames: 0, totalWins: 0, totalStonesThrown: 0, totalTakeouts: 0, bestEnd: 0, totalSweepTime: 0, xp: 0, level: 1 };
+  } catch { return { totalGames: 0, totalWins: 0, totalStonesThrown: 0, totalTakeouts: 0, bestEnd: 0, totalSweepTime: 0, xp: 0, level: 1 }; }
 }
 
 export function saveStats(stats: GameStats): void {
@@ -269,4 +271,28 @@ export function mulberry32(seed: number): () => number {
 export function getDailySeed(): number {
   const d = new Date();
   return d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate();
+}
+
+// XP system
+export const XP_PER_LEVEL = 100;
+export function xpForLevel(level: number): number { return level * XP_PER_LEVEL; }
+export function calcLevel(totalXp: number): number {
+  let level = 1;
+  let xpNeeded = XP_PER_LEVEL;
+  let remaining = totalXp;
+  while (remaining >= xpNeeded) {
+    remaining -= xpNeeded;
+    level++;
+    xpNeeded = level * XP_PER_LEVEL;
+  }
+  return level;
+}
+export function xpInCurrentLevel(totalXp: number): number {
+  let level = 1;
+  let remaining = totalXp;
+  while (remaining >= level * XP_PER_LEVEL) {
+    remaining -= level * XP_PER_LEVEL;
+    level++;
+  }
+  return remaining;
 }
