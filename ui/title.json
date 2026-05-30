@@ -162,7 +162,7 @@
                 "sourceTag": "span",
                 "type": "custom",
                 "children": [
-                  "HELP"
+                  "STATS"
                 ],
                 "properties": {
                   "class": "btn-sec-text"
@@ -171,11 +171,34 @@
               }
             ],
             "properties": {
-              "id": "btn-help",
+              "id": "btn-stats",
               "class": "btn-secondary",
               "cursor": "pointer"
             },
             "dataUid": "uid-16"
+          },
+          {
+            "type": "container",
+            "sourceTag": "div",
+            "children": [
+              {
+                "sourceTag": "span",
+                "type": "custom",
+                "children": [
+                  "HELP"
+                ],
+                "properties": {
+                  "class": "btn-sec-text"
+                },
+                "dataUid": "uid-19"
+              }
+            ],
+            "properties": {
+              "id": "btn-help",
+              "class": "btn-secondary",
+              "cursor": "pointer"
+            },
+            "dataUid": "uid-18"
           }
         ],
         "properties": {
@@ -372,7 +395,7 @@
         "column": 0
       },
       "end": {
-        "line": 93,
+        "line": 96,
         "column": 6
       }
     },
@@ -452,7 +475,7 @@
         "column": 2
       },
       "end": {
-        "line": 92,
+        "line": 95,
         "column": 8
       }
     },
@@ -533,6 +556,26 @@
       },
       "end": {
         "line": 90,
+        "column": 45
+      }
+    },
+    "uid-18": {
+      "start": {
+        "line": 92,
+        "column": 4
+      },
+      "end": {
+        "line": 94,
+        "column": 10
+      }
+    },
+    "uid-19": {
+      "start": {
+        "line": 93,
+        "column": 6
+      },
+      "end": {
+        "line": 93,
         "column": 44
       }
     }
