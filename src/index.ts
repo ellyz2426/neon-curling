@@ -1533,6 +1533,12 @@ function update(dt: number): void {
         if (speed > STONE_STOP_THRESHOLD) {
           stoneMeshes[i].rotation.y += stoneState.spin * dt * 8;
         }
+
+        // Highlight closest stone to button with brighter glow
+        const dist = Math.sqrt(stoneState.x ** 2 + (stoneState.z - HOUSE_CENTER_Z) ** 2);
+        if (dist < BUTTON_RADIUS * 3 && speed <= STONE_STOP_THRESHOLD) {
+          (stoneGlows[i].material as MeshBasicMaterial).opacity = 0.2 + Math.sin(time * 5) * 0.1;
+        }
       }
     }
   }
@@ -1569,6 +1575,20 @@ function update(dt: number): void {
     activeStone.rotation.y = game.aimAngle * 2;
     // Show aim direction with position offset
     activeStone.position.x = Math.sin(game.aimAngle) * 0.1;
+
+    // Pulsing glow on active stone during aim
+    const stoneIdx = stoneMeshes.indexOf(activeStone);
+    if (stoneIdx >= 0 && stoneGlows[stoneIdx]) {
+      (stoneGlows[stoneIdx].material as MeshBasicMaterial).opacity = 0.15 + Math.sin(time * 6) * 0.1;
+    }
+
+    // Power indicator — stone grows slightly when charging
+    if (game.isCharging) {
+      const scale = 1 + game.throwPower * 0.15;
+      activeStone.scale.set(scale, 1, scale);
+    } else {
+      activeStone.scale.set(1, 1, 1);
+    }
   }
 
   // Sweep visualization
@@ -1856,6 +1876,35 @@ function updateTrails(dt: number): void {
       if (trail[i].age > TRAIL_LIFETIME) {
         trail.splice(i, 1);
       }
+    }
+  }
+
+  // Render trail marks on ice
+  // Clean up old trail meshes
+  for (const tm of trailMeshes) {
+    world.scene.remove(tm);
+    (tm.geometry as any).dispose();
+    ((tm.material as any) as MeshBasicMaterial).dispose();
+  }
+  trailMeshes.length = 0;
+
+  // Create new trail meshes
+  const trailGeo = new PlaneGeometry(0.06, 0.06);
+  for (const [meshIdx, trail] of stoneTrails) {
+    const isPlayer = meshIdx < 8;
+    const trailColor = isPlayer ? currentTheme.playerStone : currentTheme.cpuStone;
+    for (let i = 0; i < trail.length; i += 3) { // every 3rd point for performance
+      const pt = trail[i];
+      const alpha = 1 - pt.age / TRAIL_LIFETIME;
+      if (alpha <= 0) continue;
+      const mat = new MeshBasicMaterial({
+        color: trailColor, transparent: true, opacity: alpha * 0.2, blending: AdditiveBlending,
+      });
+      const mesh = new Mesh(trailGeo, mat);
+      mesh.rotation.x = -Math.PI / 2;
+      mesh.position.set(pt.x, 0.01, pt.z);
+      world.scene.add(mesh);
+      trailMeshes.push(mesh);
     }
   }
 }
