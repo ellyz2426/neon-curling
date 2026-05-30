@@ -543,9 +543,15 @@ function wireUIEvents(): void {
   // Pause
   bindBtn('pause', 'btn-resume', () => { audio.playButtonClick(); showState('playing'); });
   bindBtn('pause', 'btn-quit', () => { audio.playButtonClick(); resetGame(); showState('title'); });
+  bindBtn('pause', 'btn-concede', () => {
+    audio.playButtonClick();
+    game.cpuScore = Math.max(game.cpuScore, game.playerScore + 1); // ensure loss
+    endGame();
+  });
 
   // Game over
   bindBtn('gameover', 'btn-rematch', () => { audio.playButtonClick(); startGame(); });
+  bindBtn('gameover', 'btn-go-stats', () => { audio.playButtonClick(); populateStats(); showState('stats'); });
   bindBtn('gameover', 'btn-go-title', () => { audio.playButtonClick(); resetGame(); showState('title'); });
 
   // Back buttons
@@ -1059,6 +1065,19 @@ function updatePhysics(dt: number): void {
       if (game.mode === 'practice') {
         // In practice, just let them keep throwing
         game.playerStonesLeft = 4;
+        // Show a random practice tip
+        const tips = [
+          'Try curling left/right with A/D keys',
+          'Hold SPACE after releasing to sweep',
+          'Sweeping keeps the stone moving farther',
+          'Aim for the button (center dot)',
+          'Charge power: click + hold, then release',
+          'Guard stones in front protect your lead',
+          'Takeouts remove opponent stones',
+          'Press G to practice guard placement',
+          'In VR: right trigger throw, left trigger sweep',
+        ];
+        showToast('TIP', tips[Math.floor(Math.random() * tips.length)]);
         beginPlayerAim();
         return;
       }
@@ -1340,6 +1359,7 @@ function endGame(): void {
   setText('gameover', 'go-mode', game.mode.toUpperCase());
   setText('gameover', 'go-best-end', String(Math.max(...game.endScores.map(e => e.playerScore), 0)));
   setText('gameover', 'go-stones', String(game.totalStonesThrown));
+  setText('gameover', 'go-level', `${stats.level} (${xpInCurrentLevel(stats.xp)}/${xpForLevel(stats.level)} XP)`);
 
   showState('gameover');
 }

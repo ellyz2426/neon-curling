@@ -49,5 +49,8 @@
     <div id="btn-quit" class="pause-btn" cursor="pointer">
       <span class="pause-btn-text">QUIT</span>
     </div>
+    <div id="btn-concede" class="pause-btn" cursor="pointer">
+      <span class="pause-btn-text">CONCEDE</span>
+    </div>
   </div>
 </div>

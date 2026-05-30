@@ -81,10 +81,17 @@
       <span class="go-stat-label">Stones Thrown:</span>
       <span id="go-stones" class="go-stat-val">0</span>
     </div>
+    <div class="go-stat-row">
+      <span class="go-stat-label">Level:</span>
+      <span id="go-level" class="go-stat-val">1</span>
+    </div>
   </div>
   <div class="go-btns">
     <div id="btn-rematch" class="go-btn" cursor="pointer">
       <span class="go-btn-text">REMATCH</span>
+    </div>
+    <div id="btn-go-stats" class="go-btn" cursor="pointer">
+      <span class="go-btn-text">STATS</span>
     </div>
     <div id="btn-go-title" class="go-btn" cursor="pointer">
       <span class="go-btn-text">TITLE</span>

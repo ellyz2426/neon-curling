@@ -4,84 +4,78 @@ Holodeck VR curling — slide neon stones down a glowing ice sheet, sweep to con
 
 Built with [IWSDK 0.4.1](https://iwsdk.dev) (Immersive Web SDK).
 
-## Play
+## 🎮 Play
 
-**Live:** https://ellyz2426.github.io/neon-curling/
+**[▶ Play Now](https://ellyz2426.github.io/neon-curling/)**
+
+Works in any modern browser. VR headset optional (Meta Quest recommended).
 
 ## Features
 
 ### Gameplay
-- **Custom curling physics**: Ice friction, curl factor, stone-stone elastic collisions, wall bounces
-- **Sweeping mechanic**: Hold Space (browser) or Left Trigger (VR) after release to reduce friction and extend stone travel
-- **Curl control**: A/D keys or thumbstick to add left/right curl spin
-- **Turn-based strategy**: Alternate throws with AI, play guards, takeouts, and draws
-- **Scoring**: Closest stone(s) to button score — 1 point per stone closer than opponent's best
-
-### Game Modes
-- **Standard**: 8 ends, 4 stones each per end (full match)
-- **Quick Match**: 4 ends, fast game
-- **Knockout**: 1 stone each, single end — last stone wins
-- **Daily Challenge**: Seeded PRNG for daily reproducibility
-- **Practice**: Unlimited throws, no opponent, free practice
-
-### AI Opponent
-- **3 difficulty levels**: Easy, Medium, Hard
-- **Strategic targeting**: Takeout attempts on close player stones, draw shots to button
-- **Adaptive accuracy**: Scales with difficulty — noise, power, and aim variance
-
-### Controls
-
-| Action | Browser | VR |
-|--------|---------|-----|
-| Charge throw | Click + hold | Right Trigger hold |
-| Release/throw | Release click | Release Trigger |
-| Aim direction | Mouse left/right | Right Thumbstick |
-| Curl (spin) | A/D keys | Left Thumbstick |
-| Sweep | Hold Space | Left Trigger |
-| Pause | ESC | B Button |
-
-### Visual & Audio
-- 5 ice themes: Holodeck, Crimson, Toxic, Ultraviolet, Solar
-- Holodeck environment: neon grid floor/ceiling, floating wireframe decorations, ambient particles
-- House (target rings): 4-foot, 8-foot, 12-foot concentric rings with button center
-- Procedural Web Audio: 15+ SFX (stone release, collision, sweep, score, takeout, countdown) + ambient drone
-- Particle effects on stone collisions
+- **Custom curling physics**: ice friction, swept friction, curl spin, elastic stone-stone collisions, wall bouncing, hog-line violations
+- **6 game modes**: Standard (8 ends), Quick (4 ends), Knockout (1 stone), Tournament (4-team bracket), Daily Challenge (seeded PRNG), Practice
+- **3 AI difficulty levels** with strategic AI (takeouts, draws, guards, freeze shots, come-around curls, hammer strategy)
+- **Hammer tracking** — authentic curling rule: scoring team gives up last-stone advantage
+- **Extra end tiebreaker** — sudden death if tied after regulation
+- **Ice condition system** — Standard, Fast, Slow, Curly ice modifiers (randomized in daily challenges)
+- **Sweeping mechanic** reduces friction (Space key / left VR trigger)
+- **Curl spin control** for curved shots (A/D keys / thumbstick)
+- **Concede option** from pause menu
 
 ### Progression
-- 20 achievements (First Stone, Takeout Artist, Double Takeout, Sweep Master, Champion, etc.)
-- Leaderboard (top 20 results)
-- Statistics tracking (games, wins, stones thrown, takeouts, best end, sweep time)
+- **XP / level system** — earn XP for wins, difficulty, scoring, tournament play
+- **30 achievements** with localStorage persistence
+- **8 stone skins** unlocked by wins (Championship Gold from tournament)
+- **Career stats tracking** — games, wins, takeouts, sweep time, best end, win rate
+- **Top 20 leaderboard**
 
-### Tech
-- IWSDK 0.4.1 dual-runtime (VR + browser) with `xr: { offer: 'once' }`
-- **ALL UI via PanelUI** — 15 `.uikitml` templates, zero HTML DOM overlays
-- Follower head-locked HUDs: score, power bar, sweep bar, toast, countdown
-- World-space panels: title, mode select, difficulty, scoreboard, game over, leaderboard, achievements, settings, help
-- Zero TypeScript errors
-- Zero HTML DOM anti-patterns
+### Visuals
+- **Holodeck environment**: grid floor/ceiling, 12 floating wireframe decorations, 40 ambient particles
+- **5 ice themes**: Holodeck, Crimson, Toxic, Ultraviolet, Solar
+- **Ice pebble marks** — 200 surface detail dots
+- **Stone trail rendering** — glowing marks on ice behind sliding stones
+- **Animated house ring scoring** — ring brightness pulses during scoring
+- **Stone spin visualization** — visible rotation during curl
+- **Button-proximity glow** — closest stones pulse brighter
+- **Power charge indicator** — stone scales up while charging
+- **Celebration particles** — burst on scoring
+- **End summary panel** — detailed breakdown after each end
 
-## Project Structure
+### Audio
+- **20+ procedural Web Audio SFX**: stone release, collision, sweep, takeout, hog violation, score, achievement, extra end, tournament win, skin unlock, countdown, game start/end
+- **Ambient synthwave drone** music with bass + pad + LFO
 
-```
-src/
-  index.ts    - Main game (world, physics, AI, input, UI)
-  types.ts    - Types, constants, themes, achievements, persistence
-  audio.ts    - AudioManager with procedural SFX + ambient music
-ui/
-  title.uikitml, modeselect.uikitml, difficulty.uikitml,
-  hud.uikitml, sweepbar.uikitml, powerbar.uikitml,
-  scoreboard.uikitml, pause.uikitml, gameover.uikitml,
-  leaderboard.uikitml, achievements.uikitml, settings.uikitml,
-  help.uikitml, toast.uikitml, countdown.uikitml
-```
+### UI
+- **19 PanelUI templates** (`.uikitml`), zero HTML DOM — fully VR-compatible
+- HUD with end, scores, stones, turn, hammer indicator, best stone distance
+- Practice mode tips with rotating suggestions
+
+### Controls
+| Action | Browser | VR |
+|--------|---------|-----|
+| Charge & Throw | Click + hold, release | Right Trigger |
+| Aim | Mouse left/right | Right Thumbstick |
+| Sweep | Hold Space | Left Trigger |
+| Curl | A/D keys | Right Thumbstick X |
+| Pause | Escape | B Button |
+
+## Tech
+
+- IWSDK 0.4.1 (Three.js + ECS)
+- TypeScript (~2,500 lines across 3 source files)
+- 19 `.uikitml` spatial UI templates
+- Procedural Web Audio (no audio files)
+- localStorage persistence (achievements, stats, skins, leaderboard)
+- GitHub Pages deployment
 
 ## Build
 
 ```bash
 npm install
-npm run build
+npx vite build
 ```
 
 ## License
 
-Private project — IWSDK game portfolio.
+MIT
