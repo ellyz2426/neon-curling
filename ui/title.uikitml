@@ -87,6 +87,9 @@
     <div id="btn-settings" class="btn-secondary" cursor="pointer">
       <span class="btn-sec-text">SETTINGS</span>
     </div>
+    <div id="btn-stats" class="btn-secondary" cursor="pointer">
+      <span class="btn-sec-text">STATS</span>
+    </div>
     <div id="btn-help" class="btn-secondary" cursor="pointer">
       <span class="btn-sec-text">HELP</span>
     </div>

@@ -1,0 +1,44 @@
+<uikitml>
+<panel width="650" height="600" background-color="#0a1020e8" border-radius="16">
+  <column padding="20" spacing="12" align="center">
+    <text font-size="28" color="#00ffff" align="center">STONE SKINS</text>
+    <panel width="610" height="2" background-color="#00ffff44" />
+    <text id="skin-current" font-size="16" color="#ffffff" align="center">Selected: Neon Classic</text>
+    <panel width="610" height="2" background-color="#ffffff22" />
+    <row width="610" spacing="0">
+      <column width="305" spacing="8">
+        <button id="skin-0" width="290" height="50" background-color="#00333380" border-radius="6">
+          <text id="skin-n0" font-size="16" color="#00ffff" align="center">Neon Classic</text>
+        </button>
+        <button id="skin-1" width="290" height="50" background-color="#33113380" border-radius="6">
+          <text id="skin-n1" font-size="16" color="#ff00ff" align="center">Plasma Core [3W]</text>
+        </button>
+        <button id="skin-2" width="290" height="50" background-color="#33220080" border-radius="6">
+          <text id="skin-n2" font-size="16" color="#ffaa00" align="center">Solar Flare [5W]</text>
+        </button>
+        <button id="skin-3" width="290" height="50" background-color="#00330080" border-radius="6">
+          <text id="skin-n3" font-size="16" color="#00ff44" align="center">Toxic Glow [8W]</text>
+        </button>
+      </column>
+      <column width="305" spacing="8">
+        <button id="skin-4" width="290" height="50" background-color="#33050580" border-radius="6">
+          <text id="skin-n4" font-size="16" color="#ff3300" align="center">Ember Stone [12W]</text>
+        </button>
+        <button id="skin-5" width="290" height="50" background-color="#11223380" border-radius="6">
+          <text id="skin-n5" font-size="16" color="#aaddff" align="center">Pure Ice [15W]</text>
+        </button>
+        <button id="skin-6" width="290" height="50" background-color="#0a0a1580" border-radius="6">
+          <text id="skin-n6" font-size="16" color="#4400ff" align="center">Void Walker [20W]</text>
+        </button>
+        <button id="skin-7" width="290" height="50" background-color="#33220080" border-radius="6">
+          <text id="skin-n7" font-size="16" color="#ffd700" align="center">Championship Gold</text>
+        </button>
+      </column>
+    </row>
+    <panel width="610" height="2" background-color="#00ffff44" />
+    <button id="skins-back" width="200" height="50" background-color="#00445580" border-radius="8">
+      <text font-size="18" color="#00ffff" align="center">BACK</text>
+    </button>
+  </column>
+</panel>
+</uikitml>

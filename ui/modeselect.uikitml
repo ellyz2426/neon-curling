@@ -92,6 +92,16 @@
         <span class="mode-desc">Seeded challenge</span>
       </div>
     </div>
+    <div class="mode-row">
+      <div id="btn-tournament" class="mode-btn" cursor="pointer">
+        <span class="mode-name">TOURNAMENT</span>
+        <span class="mode-desc">4-team bracket</span>
+      </div>
+      <div id="btn-stoneskins" class="mode-btn" cursor="pointer">
+        <span class="mode-name">STONE SKINS</span>
+        <span class="mode-desc">Customize your stones</span>
+      </div>
+    </div>
   </div>
   <div id="btn-mode-back" class="back-btn" cursor="pointer">
     <span class="back-text">BACK</span>

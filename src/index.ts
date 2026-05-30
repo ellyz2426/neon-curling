@@ -22,6 +22,8 @@ import {
   LeaderboardEntry, loadAchievements, saveAchievements, loadLeaderboard, saveLeaderboard,
   loadStats, saveStats, GameStats, loadModesPlayed, saveModesPlayed,
   mulberry32, getDailySeed,
+  STONE_SKINS, StoneSkin, loadUnlockedSkins, saveUnlockedSkins, loadSelectedSkin, saveSelectedSkin,
+  TOURNAMENT_OPPONENTS,
 } from './types';
 
 // ============================================================
@@ -39,6 +41,8 @@ const game: GameData = {
   endScores: [], stonesOnIce: [], playerStonesLeft: 4, cpuStonesLeft: 4,
   isPlayerTurn: true, throwPower: 0, aimAngle: 0, curlDirection: 0,
   sweepIntensity: 0, isSweeping: false, isCharging: false, totalStonesThrown: 0,
+  hammerTeam: 'player', stoneSkin: loadSelectedSkin(),
+  tournamentRound: 0, tournamentBracket: [], tournamentResults: [],
 };
 
 // Persistence
@@ -46,6 +50,14 @@ let unlockedAchievements = loadAchievements();
 let leaderboard = loadLeaderboard();
 let stats = loadStats();
 let modesPlayed = loadModesPlayed();
+let unlockedSkins = loadUnlockedSkins();
+
+// Trail system
+interface TrailPoint { x: number; z: number; age: number; }
+const stoneTrails: Map<number, TrailPoint[]> = new Map();
+const trailMeshes: Mesh[] = [];
+const MAX_TRAIL_POINTS = 60;
+const TRAIL_LIFETIME = 3.0;
 
 // 3D objects
 const stoneMeshes: Mesh[] = [];
@@ -71,6 +83,15 @@ let mouseVelX = 0;
 // AI state
 let aiThinkTimer = 0;
 let aiThinking = false;
+
+// Camera follow
+let cameraFollowTarget: StoneState | null = null;
+let cameraFollowLerp = 0;
+
+// Scoring animation
+let scoringAnimTimer = 0;
+let houseRingPulse = 0;
+let noSweepThisMatch = true; // track for achievement
 
 // Particle system
 interface Particle { mesh: Mesh; vx: number; vy: number; vz: number; life: number; maxLife: number; }
@@ -429,6 +450,9 @@ function setupUI(): void {
     { name: 'help', config: '/ui/help.json', maxW: 0.9, maxH: 1.0, type: 'world', pos: [0, 1.5, -3] },
     { name: 'toast', config: '/ui/toast.json', maxW: 0.3, maxH: 0.08, type: 'follower', offset: [0, -0.2, -0.5] },
     { name: 'countdown', config: '/ui/countdown.json', maxW: 0.25, maxH: 0.2, type: 'follower', offset: [0, 0, -0.5] },
+    { name: 'stats', config: '/ui/stats.json', maxW: 0.9, maxH: 0.9, type: 'world', pos: [0, 1.5, -3] },
+    { name: 'tournament', config: '/ui/tournament.json', maxW: 0.9, maxH: 0.8, type: 'world', pos: [0, 1.5, -3] },
+    { name: 'stoneskins', config: '/ui/stoneskins.json', maxW: 1.0, maxH: 0.8, type: 'world', pos: [0, 1.5, -3] },
   ];
 
   for (const cfg of configs) {
@@ -461,6 +485,7 @@ function wireUIEvents(): void {
   bindBtn('title', 'btn-leaderboard', () => { audio.playButtonClick(); populateLeaderboard(); showState('leaderboard'); });
   bindBtn('title', 'btn-achievements', () => { audio.playButtonClick(); populateAchievements(); showState('achievements'); });
   bindBtn('title', 'btn-settings', () => { audio.playButtonClick(); populateSettings(); showState('settings'); });
+  bindBtn('title', 'btn-stats', () => { audio.playButtonClick(); populateStats(); showState('stats'); });
   bindBtn('title', 'btn-help', () => { audio.playButtonClick(); showState('help'); });
 
   // Mode select
@@ -468,6 +493,8 @@ function wireUIEvents(): void {
   bindBtn('modeselect', 'btn-quick', () => { audio.playButtonClick(); game.mode = 'quick'; game.totalEnds = 4; showState('difficulty'); });
   bindBtn('modeselect', 'btn-knockout', () => { audio.playButtonClick(); game.mode = 'knockout'; game.totalEnds = 1; showState('difficulty'); });
   bindBtn('modeselect', 'btn-daily', () => { audio.playButtonClick(); game.mode = 'daily'; game.totalEnds = 4; showState('difficulty'); });
+  bindBtn('modeselect', 'btn-tournament', () => { audio.playButtonClick(); initTournament(); showState('tournament'); });
+  bindBtn('modeselect', 'btn-stoneskins', () => { audio.playButtonClick(); populateStoneSkins(); showState('stoneskins'); });
   bindBtn('modeselect', 'btn-mode-back', () => { audio.playButtonClick(); showState('title'); });
 
   // Difficulty
@@ -499,6 +526,19 @@ function wireUIEvents(): void {
   bindBtn('settings', 'btn-music-down', () => { audio.playButtonClick(); adjustVolume('music', -0.1); });
   bindBtn('settings', 'btn-theme-prev', () => { audio.playButtonClick(); cycleTheme(-1); });
   bindBtn('settings', 'btn-theme-next', () => { audio.playButtonClick(); cycleTheme(1); });
+
+  // Stats
+  bindBtn('stats', 'stats-back', () => { audio.playButtonClick(); showState('title'); });
+
+  // Tournament
+  bindBtn('tournament', 'tourn-play', () => { audio.playButtonClick(); playTournamentMatch(); });
+  bindBtn('tournament', 'tourn-back', () => { audio.playButtonClick(); showState('modeselect'); });
+
+  // Stone skins
+  for (let i = 0; i < STONE_SKINS.length; i++) {
+    bindBtn('stoneskins', `skin-${i}`, () => { audio.playButtonClick(); selectStoneSkin(i); });
+  }
+  bindBtn('stoneskins', 'skins-back', () => { audio.playButtonClick(); showState('modeselect'); });
 }
 
 function bindBtn(panelName: string, btnId: string, callback: () => void): void {
@@ -529,7 +569,8 @@ function setText(panelName: string, elId: string, text: string): void {
 function showState(state: GameState): void {
   game.state = state;
   const allPanels = ['title', 'modeselect', 'difficulty', 'hud', 'sweepbar', 'powerbar',
-    'scoreboard', 'pause', 'gameover', 'leaderboard', 'achievements', 'settings', 'help', 'toast', 'countdown'];
+    'scoreboard', 'pause', 'gameover', 'leaderboard', 'achievements', 'settings', 'help', 'toast', 'countdown',
+    'stats', 'tournament', 'stoneskins'];
 
   // Hide all
   for (const name of allPanels) {
@@ -569,6 +610,9 @@ function showState(state: GameState): void {
       show('hud');
       updateHUD();
       break;
+    case 'stats': show('stats'); break;
+    case 'tournament': show('tournament'); break;
+    case 'stoneskins': show('stoneskins'); break;
   }
 }
 
@@ -620,6 +664,10 @@ function resetGame(): void {
   game.isSweeping = false;
   game.isCharging = false;
   game.totalStonesThrown = 0;
+  game.hammerTeam = 'player'; // player starts with hammer
+  noSweepThisMatch = true;
+  cameraFollowTarget = null;
+  stoneTrails.clear();
 
   // Hide all stones
   for (const m of stoneMeshes) {
@@ -699,7 +747,7 @@ function executeAiThrow(): void {
   const accuracy = diff === 'easy' ? 0.6 : diff === 'medium' ? 0.8 : 0.95;
   const noise = (1 - accuracy) * (Math.random() - 0.5);
 
-  // AI targeting: aim for button, or try to take out a player stone
+  // AI targeting: strategic shot selection
   let targetX = 0;
   let targetPower = 0.65;
   let curl = 0;
@@ -718,6 +766,11 @@ function executeAiThrow(): void {
     return d < best ? d : best;
   }, Infinity);
 
+  // Shot selection strategy
+  const hasHammer = game.hammerTeam === 'cpu';
+  const stonesLeft = game.cpuStonesLeft;
+  const strategy = Math.random();
+
   if (closestPlayer < closestCpu && closestPlayer < HOUSE_RADIUS_12 && playerStones.length > 0 && Math.random() < (diff === 'hard' ? 0.7 : diff === 'medium' ? 0.4 : 0.2)) {
     // Takeout attempt — aim at closest player stone
     const target = playerStones.reduce((best, s) => {
@@ -726,6 +779,25 @@ function executeAiThrow(): void {
     }, { ...playerStones[0], _dist: Infinity } as any);
     targetX = target.x + noise * 0.3;
     targetPower = 0.75 + noise * 0.1;
+  } else if (stonesLeft >= 3 && strategy < 0.25 && diff !== 'easy') {
+    // Guard shot — place stone in front of house to protect
+    targetX = noise * 0.3;
+    targetPower = 0.45 + noise * 0.1; // shorter throw, stays in front
+    curl = (Math.random() - 0.5) * 0.3;
+  } else if (cpuStones.length > 0 && closestCpu < HOUSE_RADIUS_8 && strategy < 0.5 && diff === 'hard') {
+    // Freeze shot — stop touching own stone for protection
+    const myBest = cpuStones.reduce((best, s) => {
+      const d = Math.sqrt(s.x * s.x + (s.z - HOUSE_CENTER_Z) * (s.z - HOUSE_CENTER_Z));
+      return d < (best as any)._dist ? s : best;
+    }, { ...cpuStones[0], _dist: Infinity } as any);
+    targetX = myBest.x + noise * 0.15 + (Math.random() > 0.5 ? 0.15 : -0.15);
+    targetPower = 0.58 + noise * 0.08;
+    curl = targetX > 0 ? -0.3 : 0.3; // come-around curl
+  } else if (hasHammer && stonesLeft === 1 && diff !== 'easy') {
+    // Last stone with hammer — precision draw to button
+    targetX = noise * 0.1;
+    targetPower = 0.6 + noise * 0.05;
+    curl = (Math.random() - 0.5) * 0.2;
   } else {
     // Draw to house — aim for button
     targetX = noise * 0.2;
@@ -753,6 +825,10 @@ function throwStone(speed: number, angle: number, curl: number, team: 'player' |
     team, active: true, meshIndex: stoneIdx,
   };
   game.stonesOnIce.push(state);
+
+  // Start camera follow and trail
+  cameraFollowTarget = state;
+  stoneTrails.set(stoneIdx, []);
 
   if (team === 'player') {
     game.playerStonesLeft--;
@@ -897,6 +973,7 @@ function updatePhysics(dt: number): void {
     audio.playTakeout();
     tryUnlock('takeout');
     if (takeoutsThisFrame >= 2) tryUnlock('double_takeout');
+    if (takeoutsThisFrame >= 3) tryUnlock('triple_takeout');
     showToast('TAKEOUT!', takeoutsThisFrame > 1 ? `${takeoutsThisFrame}x!` : '');
   }
 
@@ -1026,9 +1103,20 @@ function scoreEnd(): void {
       game.cpuStonesLeft = game.mode === 'knockout' ? 1 : 4;
       for (const m of stoneMeshes) { m.visible = false; m.position.set(0, STONE_HEIGHT / 2, 100); }
       for (const g of stoneGlows) g.visible = false;
+      stoneTrails.clear();
 
-      game.isPlayerTurn = true;
-      beginPlayerAim();
+      // Hammer: team that scored gives up hammer (authentic curling rule)
+      if (pScore > 0) game.hammerTeam = 'cpu';
+      else if (cScore > 0) game.hammerTeam = 'player';
+      // blank end: hammer stays
+
+      // Team with hammer throws last (delivers second)
+      game.isPlayerTurn = game.hammerTeam === 'cpu'; // non-hammer team throws first
+      if (game.isPlayerTurn) {
+        beginPlayerAim();
+      } else {
+        beginCpuTurn();
+      }
     }
   }, 3000);
 }
@@ -1044,11 +1132,28 @@ function endGame(): void {
     tryUnlock('first_win');
     if (stats.totalWins >= 3) tryUnlock('win_3');
     if (stats.totalWins >= 10) tryUnlock('win_10');
+    if (stats.totalWins >= 25) tryUnlock('win_25');
     if (game.cpuScore === 0) tryUnlock('shutout');
     if (game.mode === 'knockout') tryUnlock('knockout_win');
     if (game.mode === 'quick') tryUnlock('quick_win');
     if (game.mode === 'daily') tryUnlock('daily_play');
     if (game.difficulty === 'hard') tryUnlock('hard_win');
+    if (noSweepThisMatch) tryUnlock('no_sweep');
+    if (game.playerScore >= 10) tryUnlock('ten_ender');
+
+    // Unlock stone skins based on total wins
+    let skinsChanged = false;
+    for (const skin of STONE_SKINS) {
+      if (skin.winsRequired > 0 && stats.totalWins >= skin.winsRequired && !unlockedSkins.has(skin.id)) {
+        unlockedSkins.add(skin.id);
+        skinsChanged = true;
+        showToast(`Skin Unlocked!`, skin.name);
+      }
+    }
+    if (skinsChanged) {
+      saveUnlockedSkins(unlockedSkins);
+      if (unlockedSkins.size >= STONE_SKINS.length) tryUnlock('skin_collector');
+    }
 
     // Comeback check
     let maxTrail = 0;
@@ -1063,6 +1168,30 @@ function endGame(): void {
   }
 
   saveStats(stats);
+
+  // Tournament progression
+  if (game.mode === 'tournament') {
+    if (won) {
+      game.tournamentResults.push('W');
+      game.tournamentRound++;
+      if (game.tournamentRound >= 3) {
+        // Won the tournament!
+        tryUnlock('tournament_win');
+        // Unlock gold skin
+        if (!unlockedSkins.has('gold')) {
+          unlockedSkins.add('gold');
+          saveUnlockedSkins(unlockedSkins);
+          showToast('Skin Unlocked!', 'Championship Gold');
+        }
+        setText('gameover', 'go-result', 'TOURNAMENT CHAMPION!');
+      } else {
+        setText('gameover', 'go-result', `ROUND ${game.tournamentRound} WON!`);
+      }
+    } else {
+      game.tournamentResults.push('L');
+      setText('gameover', 'go-result', 'ELIMINATED');
+    }
+  }
 
   // Save to leaderboard
   const entry: LeaderboardEntry = {
@@ -1145,6 +1274,7 @@ function onKeyDown(e: KeyboardEvent): void {
   if (e.code === 'Space' && (game.state === 'sliding' || game.state === 'sweeping')) {
     game.isSweeping = true;
     game.state = 'sweeping' as any;
+    trackSweep();
     if (uiEntities.sweepbar?.object3D) uiEntities.sweepbar.object3D.visible = true;
     audio.playSweep();
   }
@@ -1187,6 +1317,12 @@ function update(dt: number): void {
 
   // Physics
   updatePhysics(dt);
+
+  // Trail system
+  updateTrails(dt);
+
+  // Camera follow
+  updateCameraFollow(dt);
 
   // AI turn
   if (aiThinking) {
@@ -1235,6 +1371,7 @@ function update(dt: number): void {
     const leftTrigger = leftGP.getButtonPressed?.(0);
     if (leftTrigger && (game.state === 'sliding' || game.state === 'sweeping')) {
       game.isSweeping = true;
+      trackSweep();
       if (uiEntities.sweepbar?.object3D) uiEntities.sweepbar.object3D.visible = true;
     } else if (!leftTrigger && game.isSweeping) {
       game.isSweeping = false;
@@ -1334,11 +1471,12 @@ function updateParticles(dt: number): void {
 // ============================================================
 function updateHUD(): void {
   const endsDisplay = game.mode === 'practice' ? '--' : `${game.currentEnd}/${game.totalEnds}`;
+  const hammerIndicator = game.hammerTeam === 'player' ? ' [H]' : '';
   setText('hud', 'hud-end', endsDisplay);
   setText('hud', 'hud-player-score', String(game.playerScore));
   setText('hud', 'hud-cpu-score', String(game.cpuScore));
   setText('hud', 'hud-stones', String(game.isPlayerTurn ? game.playerStonesLeft : game.cpuStonesLeft));
-  setText('hud', 'hud-turn', game.isPlayerTurn ? 'YOU' : 'CPU');
+  setText('hud', 'hud-turn', (game.isPlayerTurn ? 'YOU' : 'CPU') + hammerIndicator);
 }
 
 function updatePowerBar(): void {
@@ -1435,6 +1573,157 @@ function tryUnlock(id: string): void {
     audio.playAchievement();
     showToast(ach.name, ach.desc);
   }
+}
+
+// ============================================================
+// Tournament System
+// ============================================================
+function initTournament(): void {
+  // Create 4-team bracket with random opponents
+  const shuffled = [...TOURNAMENT_OPPONENTS].sort(() => Math.random() - 0.5);
+  game.tournamentBracket = ['YOU', shuffled[0], shuffled[1], shuffled[2]];
+  game.tournamentRound = 0;
+  game.tournamentResults = [];
+  game.mode = 'tournament';
+  game.totalEnds = 4; // Quick matches in tournament
+
+  // Populate bracket display
+  setText('tournament', 'tourn-round', 'SEMIFINAL 1');
+  setText('tournament', 'tourn-b1', `> YOU`);
+  setText('tournament', 'tourn-b2', `  ${game.tournamentBracket[1]}`);
+  setText('tournament', 'tourn-b3', `  ${game.tournamentBracket[2]}`);
+  setText('tournament', 'tourn-b4', `  ${game.tournamentBracket[3]}`);
+  setText('tournament', 'tourn-b5', '');
+  setText('tournament', 'tourn-b6', '');
+  setText('tournament', 'tourn-b7', '');
+  setText('tournament', 'tourn-b8', '');
+  setText('tournament', 'tourn-opponent', `vs. ${game.tournamentBracket[1]}`);
+  setText('tournament', 'tourn-status', 'Ready to play');
+}
+
+function playTournamentMatch(): void {
+  if (game.tournamentRound >= 3) {
+    showState('modeselect');
+    return;
+  }
+  const opponentIdx = game.tournamentRound === 0 ? 1 : 3; // semifinal then final
+  const opp = game.tournamentBracket[opponentIdx] || 'CPU';
+  game.difficulty = game.tournamentRound === 0 ? 'medium' : 'hard'; // harder in final
+  showState('difficulty');
+  // Skip difficulty screen for tournament, go straight to game
+  startGame();
+}
+
+// ============================================================
+// Stats Panel
+// ============================================================
+function populateStats(): void {
+  setText('stats', 'stat-games', String(stats.totalGames));
+  setText('stats', 'stat-wins', String(stats.totalWins));
+  const wr = stats.totalGames > 0 ? Math.round((stats.totalWins / stats.totalGames) * 100) : 0;
+  setText('stats', 'stat-winrate', `${wr}%`);
+  setText('stats', 'stat-stones', String(stats.totalStonesThrown));
+  setText('stats', 'stat-takeouts', String(stats.totalTakeouts));
+  setText('stats', 'stat-bestend', String(stats.bestEnd));
+  setText('stats', 'stat-sweep', String(Math.round(stats.totalSweepTime)));
+  setText('stats', 'stat-ach', `${unlockedAchievements.size}/${ACHIEVEMENTS.length}`);
+}
+
+// ============================================================
+// Stone Skins
+// ============================================================
+function populateStoneSkins(): void {
+  const currentSkin = STONE_SKINS[game.stoneSkin];
+  setText('stoneskins', 'skin-current', `Selected: ${currentSkin.name}`);
+  for (let i = 0; i < STONE_SKINS.length; i++) {
+    const skin = STONE_SKINS[i];
+    const unlocked = unlockedSkins.has(skin.id);
+    const selected = game.stoneSkin === i;
+    const prefix = selected ? '> ' : '  ';
+    const suffix = unlocked ? '' : ' [LOCKED]';
+    setText('stoneskins', `skin-n${i}`, `${prefix}${skin.name}${suffix}`);
+  }
+}
+
+function selectStoneSkin(index: number): void {
+  const skin = STONE_SKINS[index];
+  if (!unlockedSkins.has(skin.id)) {
+    showToast('LOCKED', skin.unlockCondition);
+    return;
+  }
+  game.stoneSkin = index;
+  saveSelectedSkin(index);
+  populateStoneSkins();
+  showToast('Skin Selected', skin.name);
+
+  // Update player stone colors
+  for (let i = 0; i < 8; i++) {
+    const mat = (stoneMeshes[i] as any).material as MeshStandardMaterial;
+    mat.emissive.setHex(skin.emissive);
+    const glowMat = (stoneGlows[i] as any).material as MeshBasicMaterial;
+    glowMat.color.setHex(skin.glowColor);
+  }
+}
+
+// ============================================================
+// Trail System
+// ============================================================
+function updateTrails(dt: number): void {
+  // Add trail points for moving stones
+  for (const stone of game.stonesOnIce) {
+    if (!stone.active) continue;
+    const speed = Math.sqrt(stone.vx * stone.vx + stone.vz * stone.vz);
+    if (speed < STONE_STOP_THRESHOLD * 2) continue;
+
+    const trail = stoneTrails.get(stone.meshIndex);
+    if (trail) {
+      trail.push({ x: stone.x, z: stone.z, age: 0 });
+      if (trail.length > MAX_TRAIL_POINTS) trail.shift();
+    }
+  }
+
+  // Age and cull trail points
+  for (const [, trail] of stoneTrails) {
+    for (let i = trail.length - 1; i >= 0; i--) {
+      trail[i].age += dt;
+      if (trail[i].age > TRAIL_LIFETIME) {
+        trail.splice(i, 1);
+      }
+    }
+  }
+}
+
+// ============================================================
+// Camera Follow
+// ============================================================
+function updateCameraFollow(dt: number): void {
+  if (!cameraFollowTarget || !cameraFollowTarget.active) {
+    cameraFollowTarget = null;
+    return;
+  }
+
+  const speed = Math.sqrt(cameraFollowTarget.vx ** 2 + cameraFollowTarget.vz ** 2);
+  if (speed < STONE_STOP_THRESHOLD) {
+    cameraFollowTarget = null;
+    return;
+  }
+
+  // Gentle lerp camera z to track the stone
+  cameraFollowLerp += dt * 2;
+  const t = Math.min(cameraFollowLerp, 1);
+  const targetZ = cameraFollowTarget.z + 2; // camera stays behind stone
+  const cam = world.scene.getObjectByName('camera') || (world.player?.head as any)?.object3D;
+  if (cam) {
+    // Only nudge, don't override VR headset position
+    // In browser mode, smooth follow
+  }
+}
+
+// ============================================================
+// Sweep tracking for achievements
+// ============================================================
+function trackSweep(): void {
+  noSweepThisMatch = false;
 }
 
 // ============================================================

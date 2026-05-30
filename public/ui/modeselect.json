@@ -173,6 +173,84 @@
               "class": "mode-row"
             },
             "dataUid": "uid-11"
+          },
+          {
+            "type": "container",
+            "sourceTag": "div",
+            "children": [
+              {
+                "type": "container",
+                "sourceTag": "div",
+                "children": [
+                  {
+                    "sourceTag": "span",
+                    "type": "custom",
+                    "children": [
+                      "TOURNAMENT"
+                    ],
+                    "properties": {
+                      "class": "mode-name"
+                    },
+                    "dataUid": "uid-20"
+                  },
+                  {
+                    "sourceTag": "span",
+                    "type": "custom",
+                    "children": [
+                      "4-team bracket"
+                    ],
+                    "properties": {
+                      "class": "mode-desc"
+                    },
+                    "dataUid": "uid-21"
+                  }
+                ],
+                "properties": {
+                  "id": "btn-tournament",
+                  "class": "mode-btn",
+                  "cursor": "pointer"
+                },
+                "dataUid": "uid-19"
+              },
+              {
+                "type": "container",
+                "sourceTag": "div",
+                "children": [
+                  {
+                    "sourceTag": "span",
+                    "type": "custom",
+                    "children": [
+                      "STONE SKINS"
+                    ],
+                    "properties": {
+                      "class": "mode-name"
+                    },
+                    "dataUid": "uid-23"
+                  },
+                  {
+                    "sourceTag": "span",
+                    "type": "custom",
+                    "children": [
+                      "Customize your stones"
+                    ],
+                    "properties": {
+                      "class": "mode-desc"
+                    },
+                    "dataUid": "uid-24"
+                  }
+                ],
+                "properties": {
+                  "id": "btn-stoneskins",
+                  "class": "mode-btn",
+                  "cursor": "pointer"
+                },
+                "dataUid": "uid-22"
+              }
+            ],
+            "properties": {
+              "class": "mode-row"
+            },
+            "dataUid": "uid-18"
           }
         ],
         "properties": {
@@ -193,7 +271,7 @@
             "properties": {
               "class": "back-text"
             },
-            "dataUid": "uid-19"
+            "dataUid": "uid-26"
           }
         ],
         "properties": {
@@ -201,7 +279,7 @@
           "class": "back-btn",
           "cursor": "pointer"
         },
-        "dataUid": "uid-18"
+        "dataUid": "uid-25"
       }
     ],
     "properties": {
@@ -395,7 +473,7 @@
         "column": 0
       },
       "end": {
-        "line": 98,
+        "line": 108,
         "column": 6
       }
     },
@@ -415,7 +493,7 @@
         "column": 2
       },
       "end": {
-        "line": 94,
+        "line": 104,
         "column": 8
       }
     },
@@ -561,21 +639,91 @@
     },
     "uid-18": {
       "start": {
-        "line": 95,
-        "column": 2
+        "line": 94,
+        "column": 4
       },
       "end": {
-        "line": 97,
-        "column": 8
+        "line": 103,
+        "column": 10
       }
     },
     "uid-19": {
       "start": {
+        "line": 95,
+        "column": 6
+      },
+      "end": {
+        "line": 98,
+        "column": 12
+      }
+    },
+    "uid-20": {
+      "start": {
         "line": 96,
-        "column": 4
+        "column": 8
       },
       "end": {
         "line": 96,
+        "column": 49
+      }
+    },
+    "uid-21": {
+      "start": {
+        "line": 97,
+        "column": 8
+      },
+      "end": {
+        "line": 97,
+        "column": 53
+      }
+    },
+    "uid-22": {
+      "start": {
+        "line": 99,
+        "column": 6
+      },
+      "end": {
+        "line": 102,
+        "column": 12
+      }
+    },
+    "uid-23": {
+      "start": {
+        "line": 100,
+        "column": 8
+      },
+      "end": {
+        "line": 100,
+        "column": 50
+      }
+    },
+    "uid-24": {
+      "start": {
+        "line": 101,
+        "column": 8
+      },
+      "end": {
+        "line": 101,
+        "column": 60
+      }
+    },
+    "uid-25": {
+      "start": {
+        "line": 105,
+        "column": 2
+      },
+      "end": {
+        "line": 107,
+        "column": 8
+      }
+    },
+    "uid-26": {
+      "start": {
+        "line": 106,
+        "column": 4
+      },
+      "end": {
+        "line": 106,
         "column": 39
       }
     }

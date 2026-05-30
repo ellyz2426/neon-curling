@@ -1,0 +1,36 @@
+<uikitml>
+<panel width="600" height="600" background-color="#0a1020e8" border-radius="16">
+  <column padding="20" spacing="16" align="center">
+    <text font-size="28" color="#ffd700" align="center">TOURNAMENT</text>
+    <panel width="560" height="2" background-color="#ffd70044" />
+    <text id="tourn-round" font-size="20" color="#ffffff" align="center">QUARTERFINAL</text>
+    <panel width="560" height="2" background-color="#ffffff22" />
+    <text font-size="16" color="#00ffff88" align="center">BRACKET</text>
+    <row width="560" spacing="0">
+      <column width="280" spacing="6" align="center">
+        <text id="tourn-b1" font-size="14" color="#ffffff">---</text>
+        <text id="tourn-b2" font-size="14" color="#ffffff">---</text>
+        <text id="tourn-b3" font-size="14" color="#ffffff">---</text>
+        <text id="tourn-b4" font-size="14" color="#ffffff">---</text>
+      </column>
+      <column width="280" spacing="6" align="center">
+        <text id="tourn-b5" font-size="14" color="#ffffff">---</text>
+        <text id="tourn-b6" font-size="14" color="#ffffff">---</text>
+        <text id="tourn-b7" font-size="14" color="#ffffff">---</text>
+        <text id="tourn-b8" font-size="14" color="#ffffff">---</text>
+      </column>
+    </row>
+    <panel width="560" height="2" background-color="#ffffff22" />
+    <text id="tourn-opponent" font-size="22" color="#ff00ff" align="center">vs. Frost Wolves</text>
+    <text id="tourn-status" font-size="16" color="#00ff88" align="center">Ready to play</text>
+    <row spacing="16">
+      <button id="tourn-play" width="200" height="50" background-color="#00665580" border-radius="8">
+        <text font-size="18" color="#00ff88" align="center">PLAY MATCH</text>
+      </button>
+      <button id="tourn-back" width="200" height="50" background-color="#00445580" border-radius="8">
+        <text font-size="18" color="#00ffff" align="center">BACK</text>
+      </button>
+    </row>
+  </column>
+</panel>
+</uikitml>

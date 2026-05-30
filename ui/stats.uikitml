@@ -1,0 +1,52 @@
+<uikitml>
+<panel width="600" height="700" background-color="#0a1020e8" border-radius="16">
+  <column padding="20" spacing="12" align="center">
+    <text id="stats-title" font-size="28" color="#00ffff" align="center">CAREER STATS</text>
+    <panel width="560" height="2" background-color="#00ffff44" />
+    <row width="560" spacing="0">
+      <column width="280" spacing="8">
+        <text font-size="16" color="#00ffff88">MATCHES PLAYED</text>
+        <text id="stat-games" font-size="32" color="#ffffff">0</text>
+      </column>
+      <column width="280" spacing="8">
+        <text font-size="16" color="#00ffff88">MATCHES WON</text>
+        <text id="stat-wins" font-size="32" color="#00ff88">0</text>
+      </column>
+    </row>
+    <row width="560" spacing="0">
+      <column width="280" spacing="8">
+        <text font-size="16" color="#00ffff88">WIN RATE</text>
+        <text id="stat-winrate" font-size="32" color="#ffaa00">0%</text>
+      </column>
+      <column width="280" spacing="8">
+        <text font-size="16" color="#00ffff88">STONES THROWN</text>
+        <text id="stat-stones" font-size="32" color="#ffffff">0</text>
+      </column>
+    </row>
+    <row width="560" spacing="0">
+      <column width="280" spacing="8">
+        <text font-size="16" color="#00ffff88">TOTAL TAKEOUTS</text>
+        <text id="stat-takeouts" font-size="32" color="#ff4444">0</text>
+      </column>
+      <column width="280" spacing="8">
+        <text font-size="16" color="#00ffff88">BEST END SCORE</text>
+        <text id="stat-bestend" font-size="32" color="#ffaa00">0</text>
+      </column>
+    </row>
+    <row width="560" spacing="0">
+      <column width="280" spacing="8">
+        <text font-size="16" color="#00ffff88">SWEEP TIME (SEC)</text>
+        <text id="stat-sweep" font-size="32" color="#ff00ff">0</text>
+      </column>
+      <column width="280" spacing="8">
+        <text font-size="16" color="#00ffff88">ACHIEVEMENTS</text>
+        <text id="stat-ach" font-size="32" color="#ffd700">0/30</text>
+      </column>
+    </row>
+    <panel width="560" height="2" background-color="#00ffff44" />
+    <button id="stats-back" width="200" height="50" background-color="#00445580" border-radius="8">
+      <text font-size="18" color="#00ffff" align="center">BACK</text>
+    </button>
+  </column>
+</panel>
+</uikitml>

@@ -2,9 +2,10 @@
 
 export type GameState = 'title' | 'modeselect' | 'difficulty' | 'playing' | 'aiming' | 'throwing' |
   'sliding' | 'sweeping' | 'scoring' | 'endresult' | 'paused' | 'gameover' |
-  'leaderboard' | 'achievements' | 'settings' | 'help' | 'practice' | 'countdown';
+  'leaderboard' | 'achievements' | 'settings' | 'help' | 'practice' | 'countdown' |
+  'tournament' | 'stats' | 'stoneskins';
 
-export type GameMode = 'standard' | 'quick' | 'knockout' | 'daily' | 'practice';
+export type GameMode = 'standard' | 'quick' | 'knockout' | 'daily' | 'practice' | 'tournament';
 export type Difficulty = 'easy' | 'medium' | 'hard';
 
 export interface StoneState {
@@ -43,6 +44,12 @@ export interface GameData {
   isSweeping: boolean;
   isCharging: boolean;
   totalStonesThrown: number;
+  hammerTeam: 'player' | 'cpu'; // last stone advantage
+  stoneSkin: number; // index into STONE_SKINS
+  // Tournament
+  tournamentRound: number;
+  tournamentBracket: string[];
+  tournamentResults: string[];
 }
 
 export interface Achievement {
@@ -73,6 +80,15 @@ export const ACHIEVEMENTS: Achievement[] = [
   { id: 'guard', name: 'Guard Play', desc: 'Place a stone in front of the house', unlocked: false },
   { id: 'all_modes', name: 'Well Rounded', desc: 'Play all game modes', unlocked: false },
   { id: 'century', name: 'Century', desc: 'Throw 100 stones total', unlocked: false },
+  { id: 'triple_takeout', name: 'Triple Takeout', desc: 'Remove 3 stones with one throw', unlocked: false },
+  { id: 'freeze', name: 'Freeze Play', desc: 'Stop a stone touching the opponent\'s stone', unlocked: false },
+  { id: 'guard_master', name: 'Guard Master', desc: 'Place 3 guard stones in one end', unlocked: false },
+  { id: 'ten_ender', name: 'Ten Ender', desc: 'Score 10+ points total in one match', unlocked: false },
+  { id: 'no_sweep', name: 'Natural Slider', desc: 'Win without sweeping once', unlocked: false },
+  { id: 'max_sweep', name: 'Broom Worn Out', desc: 'Sweep for 30+ seconds total in a match', unlocked: false },
+  { id: 'tournament_win', name: 'Tournament Champion', desc: 'Win a tournament', unlocked: false },
+  { id: 'skin_collector', name: 'Collector', desc: 'Unlock all stone skins', unlocked: false },
+  { id: 'win_25', name: 'Legend', desc: 'Win 25 matches', unlocked: false },
 ];
 
 export interface ThemeColors {
@@ -188,6 +204,57 @@ export function loadModesPlayed(): Set<string> {
 export function saveModesPlayed(modes: Set<string>): void {
   try { localStorage.setItem(STORAGE_KEYS.modesPlayed, JSON.stringify([...modes])); } catch {}
 }
+
+// Stone Skins
+export interface StoneSkin {
+  id: string;
+  name: string;
+  color: number;
+  glowColor: number;
+  emissive: number;
+  wireColor: number;
+  unlockCondition: string; // human-readable
+  winsRequired: number; // 0 = default
+}
+
+export const STONE_SKINS: StoneSkin[] = [
+  { id: 'default', name: 'Neon Classic', color: 0x222233, glowColor: 0x00ffff, emissive: 0x003344, wireColor: 0x00ffff, unlockCondition: 'Default', winsRequired: 0 },
+  { id: 'plasma', name: 'Plasma Core', color: 0x331133, glowColor: 0xff00ff, emissive: 0x330033, wireColor: 0xff44ff, unlockCondition: 'Win 3 matches', winsRequired: 3 },
+  { id: 'solar', name: 'Solar Flare', color: 0x332200, glowColor: 0xffaa00, emissive: 0x331100, wireColor: 0xffcc44, unlockCondition: 'Win 5 matches', winsRequired: 5 },
+  { id: 'toxic', name: 'Toxic Glow', color: 0x003300, glowColor: 0x00ff44, emissive: 0x002200, wireColor: 0x44ff44, unlockCondition: 'Win 8 matches', winsRequired: 8 },
+  { id: 'ember', name: 'Ember Stone', color: 0x330505, glowColor: 0xff3300, emissive: 0x220202, wireColor: 0xff5533, unlockCondition: 'Win 12 matches', winsRequired: 12 },
+  { id: 'ice', name: 'Pure Ice', color: 0x112233, glowColor: 0xaaddff, emissive: 0x112244, wireColor: 0xccddff, unlockCondition: 'Win 15 matches', winsRequired: 15 },
+  { id: 'void', name: 'Void Walker', color: 0x0a0a15, glowColor: 0x4400ff, emissive: 0x110022, wireColor: 0x6644ff, unlockCondition: 'Win 20 matches', winsRequired: 20 },
+  { id: 'gold', name: 'Championship Gold', color: 0x332200, glowColor: 0xffd700, emissive: 0x332800, wireColor: 0xffee44, unlockCondition: 'Win a tournament', winsRequired: 0 },
+];
+
+export function loadUnlockedSkins(): Set<string> {
+  try {
+    const data = localStorage.getItem('neon-curling-skins');
+    return data ? new Set(JSON.parse(data)) : new Set(['default']);
+  } catch { return new Set(['default']); }
+}
+
+export function saveUnlockedSkins(skins: Set<string>): void {
+  try { localStorage.setItem('neon-curling-skins', JSON.stringify([...skins])); } catch {}
+}
+
+export function loadSelectedSkin(): number {
+  try {
+    const data = localStorage.getItem('neon-curling-selected-skin');
+    return data ? parseInt(data, 10) : 0;
+  } catch { return 0; }
+}
+
+export function saveSelectedSkin(index: number): void {
+  try { localStorage.setItem('neon-curling-selected-skin', String(index)); } catch {}
+}
+
+// Tournament opponents
+export const TOURNAMENT_OPPONENTS = [
+  'Frost Wolves', 'Ice Hawks', 'Arctic Fox', 'Polar Bears',
+  'Crystal Stags', 'Snow Vipers', 'Glacier Kings', 'Winter Storm',
+];
 
 // Seeded PRNG for daily challenges
 export function mulberry32(seed: number): () => number {
