@@ -81,7 +81,19 @@
     <span class="help-text">Quick: 4 ends, fast match</span>
     <span class="help-text">Knockout: 1 stone each, last stone wins</span>
     <span class="help-text">Daily: Seeded daily challenge</span>
+    <span class="help-text">Tournament: 4-team bracket competition</span>
     <span class="help-text">Practice: Free throw, no opponent</span>
+  </div>
+  <div class="help-section">
+    <span class="help-heading">Hammer</span>
+    <span class="help-text">[H] = last stone advantage (hammer)</span>
+    <span class="help-text">Scoring team gives up hammer next end</span>
+    <span class="help-text">Blank end keeps hammer — strategic!</span>
+  </div>
+  <div class="help-section">
+    <span class="help-heading">Stone Skins</span>
+    <span class="help-text">Win matches to unlock new stone styles</span>
+    <span class="help-text">Championship Gold: win a tournament</span>
   </div>
   <div id="btn-help-back" class="back-btn" cursor="pointer">
     <span class="back-text">BACK</span>

@@ -308,6 +308,32 @@ function createSheet(): void {
   const teeLine = new Mesh(teeGeo, teeMat);
   teeLine.position.set(0, 0.01, HOUSE_CENTER_Z);
   sheetGroup.add(teeLine);
+
+  // Ice pebble marks (small dots for realism)
+  const pebbleGeo = new SphereGeometry(0.008, 4, 4);
+  const pebbleMat = new MeshBasicMaterial({
+    color: 0xaaddff, transparent: true, opacity: 0.15,
+  });
+  for (let i = 0; i < 200; i++) {
+    const pebble = new Mesh(pebbleGeo, pebbleMat);
+    pebble.position.set(
+      (Math.random() - 0.5) * SHEET_WIDTH * 0.9,
+      0.008,
+      -Math.random() * SHEET_LENGTH,
+    );
+    pebble.scale.y = 0.3; // flatten
+    sheetGroup.add(pebble);
+  }
+
+  // Back line (behind house)
+  const backLineGeo = new BoxGeometry(SHEET_WIDTH, 0.01, 0.02);
+  const backLineMat = new MeshStandardMaterial({
+    color: currentTheme.accent, emissive: new Color(currentTheme.accent), emissiveIntensity: 0.4,
+    transparent: true, opacity: 0.5,
+  });
+  const backLine = new Mesh(backLineGeo, backLineMat);
+  backLine.position.set(0, 0.01, BACK_LINE_Z + 0.3);
+  sheetGroup.add(backLine);
 }
 
 // ============================================================
@@ -633,7 +659,7 @@ function startGame(): void {
 
   modesPlayed.add(game.mode);
   saveModesPlayed(modesPlayed);
-  if (modesPlayed.size >= 5) tryUnlock('all_modes');
+  if (modesPlayed.size >= 6) tryUnlock('all_modes');
 
   audio.playGameStart();
   runCountdown(() => {
@@ -963,6 +989,11 @@ function updatePhysics(dt: number): void {
           if (a.team !== b.team) {
             takeoutsThisFrame++;
           }
+
+          // Freeze check: stone stops touching opponent's stone
+          if (dist < STONE_RADIUS * 2.5 && impactSpeed < 0.3) {
+            tryUnlock('freeze');
+          }
         }
       }
     }
@@ -1085,9 +1116,20 @@ function scoreEnd(): void {
   if (pScore > stats.bestEnd) stats.bestEnd = pScore;
 
   audio.playScore();
-  if (pScore > 0) showToast(`YOU SCORED ${pScore}!`, '');
-  else if (cScore > 0) showToast(`CPU SCORED ${cScore}`, '');
-  else showToast('BLANK END', 'No score');
+  if (pScore > 0) {
+    showToast(`YOU SCORED ${pScore}!`, '');
+    // Celebration particles at house
+    for (let i = 0; i < pScore * 6; i++) {
+      spawnCollisionParticles(
+        (Math.random() - 0.5) * HOUSE_RADIUS_12,
+        HOUSE_CENTER_Z + (Math.random() - 0.5) * HOUSE_RADIUS_12
+      );
+    }
+  } else if (cScore > 0) {
+    showToast(`CPU SCORED ${cScore}`, '');
+  } else {
+    showToast('BLANK END', 'No score');
+  }
 
   updateScoreboard();
   showState('endresult');
@@ -1163,6 +1205,9 @@ function endGame(): void {
       if (running > maxTrail) maxTrail = running;
     }
     if (maxTrail >= 3) tryUnlock('comeback');
+
+    // Check sweep time total
+    if (stats.totalSweepTime >= 30) tryUnlock('max_sweep');
   } else {
     audio.playGameOver();
   }
@@ -1405,8 +1450,25 @@ function update(dt: number): void {
 
   // Animate house pulse
   if (houseGroup) {
-    const pulseScale = 1 + Math.sin(time * 2) * 0.02;
+    const isScoring = game.state === 'scoring' || game.state === 'endresult';
+    const pulseIntensity = isScoring ? 0.08 : 0.02;
+    const pulseSpeed = isScoring ? 6 : 2;
+    const pulseScale = 1 + Math.sin(time * pulseSpeed) * pulseIntensity;
     houseGroup.scale.set(pulseScale, 1, pulseScale);
+
+    // During scoring, pulse ring colors
+    if (isScoring) {
+      houseRingPulse = (houseRingPulse + dt * 3) % (Math.PI * 2);
+      const brightness = 0.5 + Math.sin(houseRingPulse) * 0.5;
+      for (const child of houseGroup.children) {
+        if ((child as Mesh).isMesh) {
+          const mat = (child as Mesh).material as MeshStandardMaterial;
+          if (mat.emissiveIntensity !== undefined) {
+            mat.emissiveIntensity = 0.4 + brightness * 0.6;
+          }
+        }
+      }
+    }
   }
 
   // Update particles
