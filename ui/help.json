@@ -348,12 +348,23 @@
             "sourceTag": "span",
             "type": "custom",
             "children": [
-              "Practice: Free throw, no opponent"
+              "Tournament: 4-team bracket competition"
             ],
             "properties": {
               "class": "help-text"
             },
             "dataUid": "uid-34"
+          },
+          {
+            "sourceTag": "span",
+            "type": "custom",
+            "children": [
+              "Practice: Free throw, no opponent"
+            ],
+            "properties": {
+              "class": "help-text"
+            },
+            "dataUid": "uid-35"
           }
         ],
         "properties": {
@@ -369,12 +380,109 @@
             "sourceTag": "span",
             "type": "custom",
             "children": [
+              "Hammer"
+            ],
+            "properties": {
+              "class": "help-heading"
+            },
+            "dataUid": "uid-37"
+          },
+          {
+            "sourceTag": "span",
+            "type": "custom",
+            "children": [
+              "[H] = last stone advantage (hammer)"
+            ],
+            "properties": {
+              "class": "help-text"
+            },
+            "dataUid": "uid-38"
+          },
+          {
+            "sourceTag": "span",
+            "type": "custom",
+            "children": [
+              "Scoring team gives up hammer next end"
+            ],
+            "properties": {
+              "class": "help-text"
+            },
+            "dataUid": "uid-39"
+          },
+          {
+            "sourceTag": "span",
+            "type": "custom",
+            "children": [
+              "Blank end keeps hammer — strategic!"
+            ],
+            "properties": {
+              "class": "help-text"
+            },
+            "dataUid": "uid-40"
+          }
+        ],
+        "properties": {
+          "class": "help-section"
+        },
+        "dataUid": "uid-36"
+      },
+      {
+        "type": "container",
+        "sourceTag": "div",
+        "children": [
+          {
+            "sourceTag": "span",
+            "type": "custom",
+            "children": [
+              "Stone Skins"
+            ],
+            "properties": {
+              "class": "help-heading"
+            },
+            "dataUid": "uid-42"
+          },
+          {
+            "sourceTag": "span",
+            "type": "custom",
+            "children": [
+              "Win matches to unlock new stone styles"
+            ],
+            "properties": {
+              "class": "help-text"
+            },
+            "dataUid": "uid-43"
+          },
+          {
+            "sourceTag": "span",
+            "type": "custom",
+            "children": [
+              "Championship Gold: win a tournament"
+            ],
+            "properties": {
+              "class": "help-text"
+            },
+            "dataUid": "uid-44"
+          }
+        ],
+        "properties": {
+          "class": "help-section"
+        },
+        "dataUid": "uid-41"
+      },
+      {
+        "type": "container",
+        "sourceTag": "div",
+        "children": [
+          {
+            "sourceTag": "span",
+            "type": "custom",
+            "children": [
               "BACK"
             ],
             "properties": {
               "class": "back-text"
             },
-            "dataUid": "uid-36"
+            "dataUid": "uid-46"
           }
         ],
         "properties": {
@@ -382,7 +490,7 @@
           "class": "back-btn",
           "cursor": "pointer"
         },
-        "dataUid": "uid-35"
+        "dataUid": "uid-45"
       }
     ],
     "properties": {
@@ -530,7 +638,7 @@
         "column": 0
       },
       "end": {
-        "line": 88,
+        "line": 100,
         "column": 6
       }
     },
@@ -800,7 +908,7 @@
         "column": 2
       },
       "end": {
-        "line": 84,
+        "line": 85,
         "column": 8
       }
     },
@@ -861,26 +969,126 @@
       },
       "end": {
         "line": 83,
-        "column": 68
+        "column": 73
       }
     },
     "uid-35": {
       "start": {
-        "line": 85,
-        "column": 2
+        "line": 84,
+        "column": 4
       },
       "end": {
-        "line": 87,
-        "column": 8
+        "line": 84,
+        "column": 68
       }
     },
     "uid-36": {
       "start": {
         "line": 86,
+        "column": 2
+      },
+      "end": {
+        "line": 91,
+        "column": 8
+      }
+    },
+    "uid-37": {
+      "start": {
+        "line": 87,
         "column": 4
       },
       "end": {
-        "line": 86,
+        "line": 87,
+        "column": 44
+      }
+    },
+    "uid-38": {
+      "start": {
+        "line": 88,
+        "column": 4
+      },
+      "end": {
+        "line": 88,
+        "column": 70
+      }
+    },
+    "uid-39": {
+      "start": {
+        "line": 89,
+        "column": 4
+      },
+      "end": {
+        "line": 89,
+        "column": 72
+      }
+    },
+    "uid-40": {
+      "start": {
+        "line": 90,
+        "column": 4
+      },
+      "end": {
+        "line": 90,
+        "column": 70
+      }
+    },
+    "uid-41": {
+      "start": {
+        "line": 92,
+        "column": 2
+      },
+      "end": {
+        "line": 96,
+        "column": 8
+      }
+    },
+    "uid-42": {
+      "start": {
+        "line": 93,
+        "column": 4
+      },
+      "end": {
+        "line": 93,
+        "column": 49
+      }
+    },
+    "uid-43": {
+      "start": {
+        "line": 94,
+        "column": 4
+      },
+      "end": {
+        "line": 94,
+        "column": 73
+      }
+    },
+    "uid-44": {
+      "start": {
+        "line": 95,
+        "column": 4
+      },
+      "end": {
+        "line": 95,
+        "column": 70
+      }
+    },
+    "uid-45": {
+      "start": {
+        "line": 97,
+        "column": 2
+      },
+      "end": {
+        "line": 99,
+        "column": 8
+      }
+    },
+    "uid-46": {
+      "start": {
+        "line": 98,
+        "column": 4
+      },
+      "end": {
+        "line": 98,
         "column": 39
       }
     }
