@@ -1,0 +1,61 @@
+<style>
+  .hud-panel {
+    display: flex;
+    flex-direction: row;
+    padding-top: 0.8;
+    padding-bottom: 0.8;
+    padding-left: 1.5;
+    padding-right: 1.5;
+    background-color: rgba(0, 0, 0, 0.75);
+    border-color: #00ffff;
+    border-width: 0.06;
+    border-radius: 0.8;
+    gap: 2;
+  }
+  .hud-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .hud-label {
+    font-size: 1;
+    color: #888888;
+  }
+  .hud-value {
+    font-size: 2;
+    color: #00ffff;
+    font-weight: bold;
+  }
+  .hud-value-magenta {
+    font-size: 2;
+    color: #ff00ff;
+    font-weight: bold;
+  }
+  .hud-value-yellow {
+    font-size: 2;
+    color: #ffcc00;
+    font-weight: bold;
+  }
+</style>
+<div class="hud-panel">
+  <div class="hud-group">
+    <span class="hud-label">END</span>
+    <span id="hud-end" class="hud-value">1/8</span>
+  </div>
+  <div class="hud-group">
+    <span class="hud-label">YOU</span>
+    <span id="hud-player-score" class="hud-value">0</span>
+  </div>
+  <div class="hud-group">
+    <span class="hud-label">CPU</span>
+    <span id="hud-cpu-score" class="hud-value-magenta">0</span>
+  </div>
+  <div class="hud-group">
+    <span class="hud-label">STONES</span>
+    <span id="hud-stones" class="hud-value-yellow">4</span>
+  </div>
+  <div class="hud-group">
+    <span class="hud-label">TURN</span>
+    <span id="hud-turn" class="hud-value">YOU</span>
+  </div>
+</div>

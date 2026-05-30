@@ -1,0 +1,99 @@
+<style>
+  .mode-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 3;
+    padding-bottom: 3;
+    padding-left: 5;
+    padding-right: 5;
+    background-color: rgba(0, 0, 0, 0.9);
+    border-color: #00ffff;
+    border-width: 0.12;
+    border-radius: 2;
+  }
+  .mode-title {
+    font-size: 3.5;
+    color: #00ffff;
+    font-weight: bold;
+  }
+  .mode-grid {
+    display: flex;
+    flex-direction: column;
+    margin-top: 2;
+    gap: 0.8;
+  }
+  .mode-row {
+    display: flex;
+    flex-direction: row;
+    gap: 0.8;
+  }
+  .mode-btn {
+    padding-top: 1.2;
+    padding-bottom: 1.2;
+    padding-left: 2.5;
+    padding-right: 2.5;
+    background-color: rgba(0, 255, 255, 0.12);
+    border-color: #00ffff;
+    border-width: 0.08;
+    border-radius: 1;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .mode-name {
+    font-size: 2;
+    color: #00ffff;
+    font-weight: bold;
+  }
+  .mode-desc {
+    font-size: 1.2;
+    color: #888888;
+    margin-top: 0.3;
+  }
+  .back-btn {
+    margin-top: 1.5;
+    padding-top: 0.8;
+    padding-bottom: 0.8;
+    padding-left: 2;
+    padding-right: 2;
+    background-color: rgba(255, 100, 100, 0.15);
+    border-color: #ff6666;
+    border-width: 0.06;
+    border-radius: 0.8;
+    cursor: pointer;
+  }
+  .back-text {
+    font-size: 1.4;
+    color: #ff6666;
+  }
+</style>
+<div class="mode-panel">
+  <span class="mode-title">SELECT MODE</span>
+  <div class="mode-grid">
+    <div class="mode-row">
+      <div id="btn-standard" class="mode-btn" cursor="pointer">
+        <span class="mode-name">STANDARD</span>
+        <span class="mode-desc">8 ends, full match</span>
+      </div>
+      <div id="btn-quick" class="mode-btn" cursor="pointer">
+        <span class="mode-name">QUICK MATCH</span>
+        <span class="mode-desc">4 ends, fast game</span>
+      </div>
+    </div>
+    <div class="mode-row">
+      <div id="btn-knockout" class="mode-btn" cursor="pointer">
+        <span class="mode-name">KNOCKOUT</span>
+        <span class="mode-desc">Last stone wins</span>
+      </div>
+      <div id="btn-daily" class="mode-btn" cursor="pointer">
+        <span class="mode-name">DAILY</span>
+        <span class="mode-desc">Seeded challenge</span>
+      </div>
+    </div>
+  </div>
+  <div id="btn-mode-back" class="back-btn" cursor="pointer">
+    <span class="back-text">BACK</span>
+  </div>
+</div>

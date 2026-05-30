@@ -1,0 +1,113 @@
+<style>
+  .sb-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 2;
+    padding-bottom: 2;
+    padding-left: 3;
+    padding-right: 3;
+    background-color: rgba(0, 0, 0, 0.9);
+    border-color: #00ffff;
+    border-width: 0.1;
+    border-radius: 1.5;
+  }
+  .sb-title {
+    font-size: 3;
+    color: #00ffff;
+    font-weight: bold;
+  }
+  .sb-header-row {
+    display: flex;
+    flex-direction: row;
+    margin-top: 1.5;
+    gap: 1;
+  }
+  .sb-h-label {
+    font-size: 1.2;
+    color: #888888;
+    font-weight: bold;
+  }
+  .sb-h-end {
+    font-size: 1.2;
+    color: #888888;
+  }
+  .sb-row {
+    display: flex;
+    flex-direction: row;
+    gap: 1;
+    margin-top: 0.3;
+  }
+  .sb-player-name {
+    font-size: 1.4;
+    color: #00ffff;
+    font-weight: bold;
+  }
+  .sb-cpu-name {
+    font-size: 1.4;
+    color: #ff00ff;
+    font-weight: bold;
+  }
+  .sb-val {
+    font-size: 1.4;
+    color: #ffffff;
+  }
+  .sb-total-label {
+    font-size: 1.4;
+    color: #ffcc00;
+    font-weight: bold;
+  }
+  .sb-total-val {
+    font-size: 1.8;
+    color: #ffcc00;
+    font-weight: bold;
+  }
+  .sb-total-row {
+    display: flex;
+    flex-direction: row;
+    margin-top: 1;
+    gap: 2;
+  }
+</style>
+<div class="sb-panel">
+  <span class="sb-title">SCOREBOARD</span>
+  <div class="sb-header-row">
+    <span class="sb-h-label">       </span>
+    <span class="sb-h-end">1</span>
+    <span class="sb-h-end">2</span>
+    <span class="sb-h-end">3</span>
+    <span class="sb-h-end">4</span>
+    <span class="sb-h-end">5</span>
+    <span class="sb-h-end">6</span>
+    <span class="sb-h-end">7</span>
+    <span class="sb-h-end">8</span>
+  </div>
+  <div class="sb-row">
+    <span class="sb-player-name">YOU </span>
+    <span id="sb-p1" class="sb-val">-</span>
+    <span id="sb-p2" class="sb-val">-</span>
+    <span id="sb-p3" class="sb-val">-</span>
+    <span id="sb-p4" class="sb-val">-</span>
+    <span id="sb-p5" class="sb-val">-</span>
+    <span id="sb-p6" class="sb-val">-</span>
+    <span id="sb-p7" class="sb-val">-</span>
+    <span id="sb-p8" class="sb-val">-</span>
+  </div>
+  <div class="sb-row">
+    <span class="sb-cpu-name">CPU </span>
+    <span id="sb-c1" class="sb-val">-</span>
+    <span id="sb-c2" class="sb-val">-</span>
+    <span id="sb-c3" class="sb-val">-</span>
+    <span id="sb-c4" class="sb-val">-</span>
+    <span id="sb-c5" class="sb-val">-</span>
+    <span id="sb-c6" class="sb-val">-</span>
+    <span id="sb-c7" class="sb-val">-</span>
+    <span id="sb-c8" class="sb-val">-</span>
+  </div>
+  <div class="sb-total-row">
+    <span class="sb-total-label">YOU:</span>
+    <span id="sb-ptotal" class="sb-total-val">0</span>
+    <span class="sb-total-label">CPU:</span>
+    <span id="sb-ctotal" class="sb-total-val">0</span>
+  </div>
+</div>

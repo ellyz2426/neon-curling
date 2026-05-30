@@ -1,0 +1,28 @@
+<style>
+  .toast-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 0.6;
+    padding-bottom: 0.6;
+    padding-left: 2;
+    padding-right: 2;
+    background-color: rgba(0, 0, 0, 0.8);
+    border-color: #00ffff;
+    border-width: 0.06;
+    border-radius: 0.8;
+  }
+  .toast-text {
+    font-size: 2;
+    color: #00ffff;
+    font-weight: bold;
+  }
+  .toast-sub {
+    font-size: 1.2;
+    color: #888888;
+  }
+</style>
+<div class="toast-panel">
+  <span id="toast-text" class="toast-text">NICE SHOT!</span>
+  <span id="toast-sub" class="toast-sub"></span>
+</div>

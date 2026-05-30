@@ -1,0 +1,89 @@
+<style>
+  .help-panel {
+    display: flex;
+    flex-direction: column;
+    padding-top: 2;
+    padding-bottom: 2;
+    padding-left: 3;
+    padding-right: 3;
+    background-color: rgba(0, 0, 0, 0.9);
+    border-color: #00ffff;
+    border-width: 0.1;
+    border-radius: 1.5;
+  }
+  .help-title {
+    font-size: 3;
+    color: #00ffff;
+    font-weight: bold;
+  }
+  .help-section {
+    margin-top: 1;
+  }
+  .help-heading {
+    font-size: 1.8;
+    color: #ffcc00;
+    font-weight: bold;
+  }
+  .help-text {
+    font-size: 1.2;
+    color: #cccccc;
+    margin-top: 0.3;
+  }
+  .back-btn {
+    margin-top: 1.5;
+    padding-top: 0.8;
+    padding-bottom: 0.8;
+    padding-left: 2;
+    padding-right: 2;
+    background-color: rgba(255, 100, 100, 0.15);
+    border-color: #ff6666;
+    border-width: 0.06;
+    border-radius: 0.8;
+    cursor: pointer;
+    align-self: center;
+  }
+  .back-text { font-size: 1.4; color: #ff6666; }
+</style>
+<div class="help-panel">
+  <span class="help-title">HOW TO PLAY</span>
+  <div class="help-section">
+    <span class="help-heading">Browser Controls</span>
+    <span class="help-text">Click + drag down to charge power</span>
+    <span class="help-text">Move mouse left/right to aim</span>
+    <span class="help-text">Release to throw stone</span>
+    <span class="help-text">Hold SPACE to sweep after release</span>
+    <span class="help-text">ESC = Pause</span>
+  </div>
+  <div class="help-section">
+    <span class="help-heading">VR Controls</span>
+    <span class="help-text">Right Trigger: charge + release to throw</span>
+    <span class="help-text">Right Thumbstick: aim direction</span>
+    <span class="help-text">Left Trigger: hold to sweep</span>
+    <span class="help-text">B Button: pause</span>
+  </div>
+  <div class="help-section">
+    <span class="help-heading">Curling Rules</span>
+    <span class="help-text">Slide stones toward the house (target rings)</span>
+    <span class="help-text">Closest stone(s) to the button score</span>
+    <span class="help-text">Only 1 team scores per end</span>
+    <span class="help-text">Sweep to keep stone moving farther</span>
+    <span class="help-text">Knock opponents out of the house!</span>
+  </div>
+  <div class="help-section">
+    <span class="help-heading">Scoring</span>
+    <span class="help-text">Button (center) = closest = best</span>
+    <span class="help-text">Score 1 point per stone closer than opponent</span>
+    <span class="help-text">Most points after all ends wins</span>
+  </div>
+  <div class="help-section">
+    <span class="help-heading">Modes</span>
+    <span class="help-text">Standard: 8 ends, 4 stones each per end</span>
+    <span class="help-text">Quick: 4 ends, fast match</span>
+    <span class="help-text">Knockout: 1 stone each, last stone wins</span>
+    <span class="help-text">Daily: Seeded daily challenge</span>
+    <span class="help-text">Practice: Free throw, no opponent</span>
+  </div>
+  <div id="btn-help-back" class="back-btn" cursor="pointer">
+    <span class="back-text">BACK</span>
+  </div>
+</div>

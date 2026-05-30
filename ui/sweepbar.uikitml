@@ -1,0 +1,46 @@
+<style>
+  .sweep-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 0.6;
+    padding-bottom: 0.6;
+    padding-left: 1.5;
+    padding-right: 1.5;
+    background-color: rgba(0, 0, 0, 0.7);
+    border-color: #ffcc00;
+    border-width: 0.06;
+    border-radius: 0.6;
+  }
+  .sweep-label {
+    font-size: 1.2;
+    color: #ffcc00;
+    font-weight: bold;
+  }
+  .sweep-bar-bg {
+    margin-top: 0.3;
+    background-color: rgba(255, 255, 255, 0.15);
+    border-radius: 0.3;
+    padding-top: 0.1;
+    padding-bottom: 0.1;
+    padding-left: 0.2;
+    padding-right: 0.2;
+  }
+  .sweep-bar-fill {
+    font-size: 1.4;
+    color: #ffcc00;
+    font-weight: bold;
+  }
+  .sweep-hint {
+    font-size: 0.9;
+    color: #888888;
+    margin-top: 0.2;
+  }
+</style>
+<div class="sweep-panel">
+  <span class="sweep-label">SWEEP</span>
+  <div class="sweep-bar-bg">
+    <span id="sweep-bar" class="sweep-bar-fill">|||||||||.</span>
+  </div>
+  <span id="sweep-hint" class="sweep-hint">Move controller to sweep!</span>
+</div>

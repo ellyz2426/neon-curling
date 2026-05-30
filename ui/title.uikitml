@@ -1,0 +1,94 @@
+<style>
+  .title-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 4;
+    padding-bottom: 4;
+    padding-left: 6;
+    padding-right: 6;
+    background-color: rgba(0, 0, 0, 0.9);
+    border-color: #00ffff;
+    border-width: 0.15;
+    border-radius: 2;
+  }
+  .title-text {
+    font-size: 5;
+    color: #00ffff;
+    font-weight: bold;
+  }
+  .subtitle {
+    font-size: 1.8;
+    color: #a0a0a0;
+    margin-top: 1;
+  }
+  .btn-row {
+    display: flex;
+    flex-direction: row;
+    margin-top: 2;
+    gap: 1;
+  }
+  .btn {
+    padding-top: 1;
+    padding-bottom: 1;
+    padding-left: 2;
+    padding-right: 2;
+    background-color: rgba(0, 255, 255, 0.15);
+    border-color: #00ffff;
+    border-width: 0.08;
+    border-radius: 1;
+    cursor: pointer;
+  }
+  .btn-text {
+    font-size: 1.8;
+    color: #00ffff;
+    font-weight: bold;
+  }
+  .btn-secondary {
+    padding-top: 0.8;
+    padding-bottom: 0.8;
+    padding-left: 1.5;
+    padding-right: 1.5;
+    background-color: rgba(0, 255, 255, 0.08);
+    border-color: #00ffff;
+    border-width: 0.05;
+    border-radius: 0.8;
+    cursor: pointer;
+  }
+  .btn-sec-text {
+    font-size: 1.4;
+    color: #00cccc;
+  }
+  .bottom-row {
+    display: flex;
+    flex-direction: row;
+    margin-top: 1.5;
+    gap: 1;
+  }
+</style>
+<div class="title-panel">
+  <span class="title-text">NEON CURLING</span>
+  <span class="subtitle">Holodeck Ice Sport</span>
+  <div class="btn-row">
+    <div id="btn-play" class="btn" cursor="pointer">
+      <span class="btn-text">PLAY</span>
+    </div>
+    <div id="btn-practice" class="btn" cursor="pointer">
+      <span class="btn-text">PRACTICE</span>
+    </div>
+  </div>
+  <div class="bottom-row">
+    <div id="btn-leaderboard" class="btn-secondary" cursor="pointer">
+      <span class="btn-sec-text">LEADERBOARD</span>
+    </div>
+    <div id="btn-achievements" class="btn-secondary" cursor="pointer">
+      <span class="btn-sec-text">ACHIEVEMENTS</span>
+    </div>
+    <div id="btn-settings" class="btn-secondary" cursor="pointer">
+      <span class="btn-sec-text">SETTINGS</span>
+    </div>
+    <div id="btn-help" class="btn-secondary" cursor="pointer">
+      <span class="btn-sec-text">HELP</span>
+    </div>
+  </div>
+</div>

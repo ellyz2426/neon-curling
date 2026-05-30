@@ -1,0 +1,83 @@
+<style>
+  .ach-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 2;
+    padding-bottom: 2;
+    padding-left: 3;
+    padding-right: 3;
+    background-color: rgba(0, 0, 0, 0.9);
+    border-color: #ffcc00;
+    border-width: 0.1;
+    border-radius: 1.5;
+  }
+  .ach-title {
+    font-size: 3;
+    color: #ffcc00;
+    font-weight: bold;
+  }
+  .ach-count {
+    font-size: 1.4;
+    color: #888888;
+    margin-top: 0.5;
+  }
+  .ach-list {
+    display: flex;
+    flex-direction: column;
+    margin-top: 1;
+    gap: 0.3;
+  }
+  .ach-row {
+    display: flex;
+    flex-direction: row;
+    gap: 1;
+  }
+  .ach-icon { font-size: 1.3; color: #ffcc00; }
+  .ach-name { font-size: 1.3; color: #ffffff; }
+  .ach-desc { font-size: 1.1; color: #666666; }
+  .ach-locked-icon { font-size: 1.3; color: #444444; }
+  .ach-locked-name { font-size: 1.3; color: #444444; }
+  .back-btn {
+    margin-top: 1.5;
+    padding-top: 0.8;
+    padding-bottom: 0.8;
+    padding-left: 2;
+    padding-right: 2;
+    background-color: rgba(255, 100, 100, 0.15);
+    border-color: #ff6666;
+    border-width: 0.06;
+    border-radius: 0.8;
+    cursor: pointer;
+  }
+  .back-text { font-size: 1.4; color: #ff6666; }
+</style>
+<div class="ach-panel">
+  <span class="ach-title">ACHIEVEMENTS</span>
+  <span id="ach-count" class="ach-count">0 / 20</span>
+  <div class="ach-list">
+    <div class="ach-row"><span id="ach-i1" class="ach-icon">[*]</span><span id="ach-n1" class="ach-name">---</span><span id="ach-d1" class="ach-desc">---</span></div>
+    <div class="ach-row"><span id="ach-i2" class="ach-icon">[*]</span><span id="ach-n2" class="ach-name">---</span><span id="ach-d2" class="ach-desc">---</span></div>
+    <div class="ach-row"><span id="ach-i3" class="ach-icon">[*]</span><span id="ach-n3" class="ach-name">---</span><span id="ach-d3" class="ach-desc">---</span></div>
+    <div class="ach-row"><span id="ach-i4" class="ach-icon">[*]</span><span id="ach-n4" class="ach-name">---</span><span id="ach-d4" class="ach-desc">---</span></div>
+    <div class="ach-row"><span id="ach-i5" class="ach-icon">[*]</span><span id="ach-n5" class="ach-name">---</span><span id="ach-d5" class="ach-desc">---</span></div>
+    <div class="ach-row"><span id="ach-i6" class="ach-icon">[*]</span><span id="ach-n6" class="ach-name">---</span><span id="ach-d6" class="ach-desc">---</span></div>
+    <div class="ach-row"><span id="ach-i7" class="ach-icon">[*]</span><span id="ach-n7" class="ach-name">---</span><span id="ach-d7" class="ach-desc">---</span></div>
+    <div class="ach-row"><span id="ach-i8" class="ach-icon">[*]</span><span id="ach-n8" class="ach-name">---</span><span id="ach-d8" class="ach-desc">---</span></div>
+    <div class="ach-row"><span id="ach-i9" class="ach-icon">[*]</span><span id="ach-n9" class="ach-name">---</span><span id="ach-d9" class="ach-desc">---</span></div>
+    <div class="ach-row"><span id="ach-i10" class="ach-icon">[*]</span><span id="ach-n10" class="ach-name">---</span><span id="ach-d10" class="ach-desc">---</span></div>
+    <div class="ach-row"><span id="ach-i11" class="ach-icon">[*]</span><span id="ach-n11" class="ach-name">---</span><span id="ach-d11" class="ach-desc">---</span></div>
+    <div class="ach-row"><span id="ach-i12" class="ach-icon">[*]</span><span id="ach-n12" class="ach-name">---</span><span id="ach-d12" class="ach-desc">---</span></div>
+    <div class="ach-row"><span id="ach-i13" class="ach-icon">[*]</span><span id="ach-n13" class="ach-name">---</span><span id="ach-d13" class="ach-desc">---</span></div>
+    <div class="ach-row"><span id="ach-i14" class="ach-icon">[*]</span><span id="ach-n14" class="ach-name">---</span><span id="ach-d14" class="ach-desc">---</span></div>
+    <div class="ach-row"><span id="ach-i15" class="ach-icon">[*]</span><span id="ach-n15" class="ach-name">---</span><span id="ach-d15" class="ach-desc">---</span></div>
+    <div class="ach-row"><span id="ach-i16" class="ach-icon">[*]</span><span id="ach-n16" class="ach-name">---</span><span id="ach-d16" class="ach-desc">---</span></div>
+    <div class="ach-row"><span id="ach-i17" class="ach-icon">[*]</span><span id="ach-n17" class="ach-name">---</span><span id="ach-d17" class="ach-desc">---</span></div>
+    <div class="ach-row"><span id="ach-i18" class="ach-icon">[*]</span><span id="ach-n18" class="ach-name">---</span><span id="ach-d18" class="ach-desc">---</span></div>
+    <div class="ach-row"><span id="ach-i19" class="ach-icon">[*]</span><span id="ach-n19" class="ach-name">---</span><span id="ach-d19" class="ach-desc">---</span></div>
+    <div class="ach-row"><span id="ach-i20" class="ach-icon">[*]</span><span id="ach-n20" class="ach-name">---</span><span id="ach-d20" class="ach-desc">---</span></div>
+  </div>
+  <div id="btn-ach-back" class="back-btn" cursor="pointer">
+    <span class="back-text">BACK</span>
+  </div>
+</div>

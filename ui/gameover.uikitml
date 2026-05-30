@@ -1,0 +1,93 @@
+<style>
+  .go-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 3;
+    padding-bottom: 3;
+    padding-left: 5;
+    padding-right: 5;
+    background-color: rgba(0, 0, 0, 0.95);
+    border-color: #00ffff;
+    border-width: 0.12;
+    border-radius: 2;
+  }
+  .go-result {
+    font-size: 4;
+    font-weight: bold;
+  }
+  .go-win { color: #00ff64; }
+  .go-lose { color: #ff3c3c; }
+  .go-draw { color: #ffcc00; }
+  .go-stats {
+    display: flex;
+    flex-direction: column;
+    margin-top: 1.5;
+    gap: 0.4;
+  }
+  .go-stat-row {
+    display: flex;
+    flex-direction: row;
+    gap: 1;
+  }
+  .go-stat-label {
+    font-size: 1.4;
+    color: #888888;
+  }
+  .go-stat-val {
+    font-size: 1.4;
+    color: #ffffff;
+    font-weight: bold;
+  }
+  .go-btns {
+    display: flex;
+    flex-direction: row;
+    margin-top: 2;
+    gap: 1;
+  }
+  .go-btn {
+    padding-top: 1;
+    padding-bottom: 1;
+    padding-left: 2.5;
+    padding-right: 2.5;
+    background-color: rgba(0, 255, 255, 0.15);
+    border-color: #00ffff;
+    border-width: 0.08;
+    border-radius: 1;
+    cursor: pointer;
+  }
+  .go-btn-text {
+    font-size: 1.8;
+    color: #00ffff;
+    font-weight: bold;
+  }
+</style>
+<div class="go-panel">
+  <span id="go-result" class="go-result go-win">YOU WIN!</span>
+  <div class="go-stats">
+    <div class="go-stat-row">
+      <span class="go-stat-label">Final Score:</span>
+      <span id="go-score" class="go-stat-val">0 - 0</span>
+    </div>
+    <div class="go-stat-row">
+      <span class="go-stat-label">Mode:</span>
+      <span id="go-mode" class="go-stat-val">Standard</span>
+    </div>
+    <div class="go-stat-row">
+      <span class="go-stat-label">Best End:</span>
+      <span id="go-best-end" class="go-stat-val">0</span>
+    </div>
+    <div class="go-stat-row">
+      <span class="go-stat-label">Stones Thrown:</span>
+      <span id="go-stones" class="go-stat-val">0</span>
+    </div>
+  </div>
+  <div class="go-btns">
+    <div id="btn-rematch" class="go-btn" cursor="pointer">
+      <span class="go-btn-text">REMATCH</span>
+    </div>
+    <div id="btn-go-title" class="go-btn" cursor="pointer">
+      <span class="go-btn-text">TITLE</span>
+    </div>
+  </div>
+</div>

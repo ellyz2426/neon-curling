@@ -1,0 +1,109 @@
+<style>
+  .settings-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 2;
+    padding-bottom: 2;
+    padding-left: 4;
+    padding-right: 4;
+    background-color: rgba(0, 0, 0, 0.9);
+    border-color: #00ffff;
+    border-width: 0.1;
+    border-radius: 1.5;
+  }
+  .set-title {
+    font-size: 3;
+    color: #00ffff;
+    font-weight: bold;
+  }
+  .set-group {
+    display: flex;
+    flex-direction: column;
+    margin-top: 1.5;
+    gap: 0.6;
+  }
+  .set-row {
+    display: flex;
+    flex-direction: row;
+    gap: 1;
+    align-items: center;
+  }
+  .set-label {
+    font-size: 1.4;
+    color: #aaaaaa;
+  }
+  .set-btn {
+    padding-top: 0.4;
+    padding-bottom: 0.4;
+    padding-left: 0.8;
+    padding-right: 0.8;
+    background-color: rgba(0, 255, 255, 0.2);
+    border-color: #00ffff;
+    border-width: 0.05;
+    border-radius: 0.4;
+    cursor: pointer;
+  }
+  .set-btn-text {
+    font-size: 1.4;
+    color: #00ffff;
+    font-weight: bold;
+  }
+  .set-val {
+    font-size: 1.4;
+    color: #ffffff;
+    font-weight: bold;
+  }
+  .set-theme-row {
+    display: flex;
+    flex-direction: row;
+    gap: 0.6;
+    align-items: center;
+    margin-top: 0.8;
+  }
+  .back-btn {
+    margin-top: 1.5;
+    padding-top: 0.8;
+    padding-bottom: 0.8;
+    padding-left: 2;
+    padding-right: 2;
+    background-color: rgba(255, 100, 100, 0.15);
+    border-color: #ff6666;
+    border-width: 0.06;
+    border-radius: 0.8;
+    cursor: pointer;
+  }
+  .back-text { font-size: 1.4; color: #ff6666; }
+</style>
+<div class="settings-panel">
+  <span class="set-title">SETTINGS</span>
+  <div class="set-group">
+    <div class="set-row">
+      <span class="set-label">Master</span>
+      <div id="btn-master-down" class="set-btn" cursor="pointer"><span class="set-btn-text">-</span></div>
+      <span id="vol-master" class="set-val">80</span>
+      <div id="btn-master-up" class="set-btn" cursor="pointer"><span class="set-btn-text">+</span></div>
+    </div>
+    <div class="set-row">
+      <span class="set-label">SFX   </span>
+      <div id="btn-sfx-down" class="set-btn" cursor="pointer"><span class="set-btn-text">-</span></div>
+      <span id="vol-sfx" class="set-val">80</span>
+      <div id="btn-sfx-up" class="set-btn" cursor="pointer"><span class="set-btn-text">+</span></div>
+    </div>
+    <div class="set-row">
+      <span class="set-label">Music </span>
+      <div id="btn-music-down" class="set-btn" cursor="pointer"><span class="set-btn-text">-</span></div>
+      <span id="vol-music" class="set-val">60</span>
+      <div id="btn-music-up" class="set-btn" cursor="pointer"><span class="set-btn-text">+</span></div>
+    </div>
+    <div class="set-theme-row">
+      <span class="set-label">Theme</span>
+      <div id="btn-theme-prev" class="set-btn" cursor="pointer"><span class="set-btn-text">&lt;</span></div>
+      <span id="theme-name" class="set-val">Holodeck</span>
+      <div id="btn-theme-next" class="set-btn" cursor="pointer"><span class="set-btn-text">&gt;</span></div>
+    </div>
+  </div>
+  <div id="btn-settings-back" class="back-btn" cursor="pointer">
+    <span class="back-text">BACK</span>
+  </div>
+</div>
